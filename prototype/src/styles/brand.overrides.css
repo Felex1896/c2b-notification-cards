@@ -1,0 +1,20 @@
+/* Brand anatomy overrides — hand-written, the brand skin's exceptions.
+ *
+ * Belongs here: a value the brand skin needs different that is not a colour,
+ * font or radius role and not one of the named anatomy tokens (input padding,
+ * card radius, --field-prefix-width, font family). Named tokens are edited in
+ * the design-system token files and arrive through brand.generated.css —
+ * regenerate that sibling, never hand-edit it.
+ *
+ * Counter: 3 rules on one component → promote that component's anatomy into
+ * the named tokens now. 12 rules in this file → stop and promote across the
+ * file. `npm run check:skin` prints the counts and warns past them; it does
+ * not fail the build. Thresholds may be retuned.
+ *
+ * JSX stays out of it: at most one `skin` fork per component, and only to add
+ * or remove an element or change text. Colour and spacing come from a token or
+ * from a rule here.
+ *
+ * Selectors: [data-skin="brand"] for light, [data-skin="brand"].dark for dark.
+ * This file is imported after brand.generated.css, so equal specificity wins.
+ */

@@ -1,0 +1,117 @@
+{
+  "color": {
+    "surface": {
+      "background": {
+        "$type": "color",
+        "$value": "{color.neutral.95}",
+        "$description": "Page canvas. Use instead of card when the surface is the window, not a raised panel."
+      },
+      "card": {
+        "$type": "color",
+        "$value": "{color.neutral.91}",
+        "$description": "Raised panel on the canvas. Use instead of background for a contained block."
+      },
+      "popover": {
+        "$type": "color",
+        "$value": "{color.neutral.91}",
+        "$description": "Overlay surface. Same swatch as card; use for menus and dropdowns, not page panels."
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "{color.neutral.87}",
+        "$description": "Quiet fill behind a secondary control. Use instead of muted when the fill is a button, not a well."
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.neutral.87}",
+        "$description": "Recessed well. Use instead of secondary when the block is not a control."
+      },
+      "control": {
+        "$type": "color",
+        "$value": "{color.neutral.85}",
+        "$description": "Fill of a control that is not the primary action — switch off-track, field interior, disabled fill. Use instead of border.input, which is a hairline."
+      },
+      "accent": {
+        "$type": "color",
+        "$value": "{color.citron.500}",
+        "$description": "Brand chrome that is not the primary button. Fill only on light — never as text."
+      }
+    },
+    "text": {
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.neutral.5}",
+        "$description": "Default copy on background or card. Use instead of muted whenever the line must be read, not glanced."
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.neutral.41}",
+        "$description": "Supporting copy on light. Darker than the invert of the landing 50% grey so AA holds on canvas and card. Do not use on muted surfaces."
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "{color.neutral.20}",
+        "$description": "Darker supporting copy than muted. Use when muted is too faint; this pair passes AA on the light canvas."
+      },
+      "card": {
+        "$type": "color",
+        "$value": "{color.neutral.5}",
+        "$description": "Default copy on a card. Same swatch as text.foreground; keep the role for surfaces that are not the canvas."
+      },
+      "popover": {
+        "$type": "color",
+        "$value": "{color.neutral.5}",
+        "$description": "Default copy on a popover. Same swatch as text.card; use only inside overlays."
+      }
+    },
+    "action": {
+      "primary": {
+        "$type": "color",
+        "$value": "{color.citron.500}",
+        "$description": "Primary button fill. Not text on light — citron on the light canvas fails contrast."
+      },
+      "primary-foreground": {
+        "$type": "color",
+        "$value": "{color.neutral.5}",
+        "$description": "Text and icons on a primary fill. Use instead of text.foreground, which is for the canvas, not citron."
+      },
+      "accent": {
+        "$type": "color",
+        "$value": "{color.citron.500}",
+        "$description": "Selected or hover accent fill. Same rule as primary: fill only on light."
+      },
+      "accent-foreground": {
+        "$type": "color",
+        "$value": "{color.neutral.5}",
+        "$description": "Text on an accent fill. Same swatch as primary-foreground; keep the role next to action.accent."
+      },
+      "destructive": {
+        "$type": "color",
+        "$value": "{color.red.700}",
+        "$description": "Danger text and fill on light. Darker than the landing red so AA holds on canvas and card. Do not use on muted surfaces."
+      },
+      "destructive-foreground": {
+        "$type": "color",
+        "$value": "{color.neutral.98}",
+        "$description": "Text on a destructive fill. Passes AA against red.700. Landing does not show that button."
+      }
+    },
+    "border": {
+      "default": {
+        "$type": "color",
+        "$value": "{color.neutral.85}",
+        "$description": "Hairline between surfaces. Decorative — it does not meet 3:1 against the canvas."
+      },
+      "input": {
+        "$type": "color",
+        "$value": "{color.neutral.85}",
+        "$description": "Field edge. Same swatch as border.default; use on controls, not panels."
+      },
+      "ring": {
+        "$type": "color",
+        "$value": "{color.citron.500}",
+        "$description": "Focus ring. Use instead of border.default when the edge must show keyboard focus."
+      }
+    }
+  }
+}
