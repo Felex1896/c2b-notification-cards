@@ -12,7 +12,7 @@ sources:
 
 Tokens: [tokens.md](./tokens.md). The prototype consumes these recipes through the token generator. No `components.json` — that file appears only for an MCP or Storybook consumer.
 
-Landing-measured: Button, Input, Card, Badge. Invented to sit next to them: Switch, Checkbox, Select, Field error. Hover fills were not distinct on the landing; focus uses `color.border.ring` and `motion.role.color` (light ring fails 3:1 — see tokens Open). Disabled: fade, do not recolor.
+Landing-measured: Button, Input, Card, Badge. Sizes and radii follow the prototype values in tokens.md Radius. Invented to sit next to them: Switch, Checkbox, Select, Field error. Hover fills were not distinct on the landing; focus uses `color.border.ring` and `motion.role.color` (light ring fails 3:1 — see tokens Open). Disabled: fade, do not recolor.
 
 Do not document product composites (the four alert cards). Those are the spec, not this catalog.
 
@@ -20,15 +20,15 @@ Do not document product composites (the four alert cards). Those are the spec, n
 
 **Identity.** Commits an action. Citron fill is the only loud control.
 
-**Variants.** `primary` — `color.action.primary` fill, `color.action.primary-foreground` label, `radius.control.default`. `ghost` — no fill; nav uses `color.text.muted` and `typography.ui`, a stronger ghost (Log In) uses `color.text.foreground` and `typography.label`. `outline` — transparent fill, `color.border.input` edge, `color.text.foreground` label, hover `color.surface.muted`. `link` — `color.text.foreground`, underline on hover; not citron.
+**Variants.** `primary` — `color.action.primary` fill, `color.action.primary-foreground` label, `radius.control.default`. `ghost` — icon-only buttons (close cross, burger), no fill. `outline` — transparent fill, `color.border.input` edge, `color.text.foreground` label, hover `color.surface.muted`. `link` — inside running text only, `color.text.foreground`, underline on hover; not citron.
 
-**Sizes.** `default` — compact, as Sign Up / Send Message (`typography.label`). `large` — marketing CTA only (`typography.title`). Prototype uses `default`.
+**Sizes.** One: `size.control.default` (40px) tall, `radius.control.default` (12px), `typography.label`. Icon-only buttons are 40 × 40. Exception: an icon button inside a table row (copy address, row details) keeps its small size. No small or large size.
 
 **States.** Default, hover (colour shift via `motion.role.color`, no extra swatch), focus (`color.border.ring`), disabled (fade), active.
 
-**When to use.** One primary per cluster. Ghost for nav and secondary actions. `outline` for Cancel in a card footer. `link` for in-copy actions that are not a commit ("Use a different chat", "Use page default").
+**When to use.** One primary per block. `outline` for every other text button (Cancel, Close, Remove, Upload, Copy). `ghost` for icon-only buttons. `link` for in-copy actions that are not a commit ("Use a different chat", "Use page default").
 
-**When not to use.** Do not use `primary` for mute, cancel, or row chrome. On light, `primary` fill fails 3:1 against canvas and card. No destructive-filled button — that pair fails AA on dark; danger is Field error text.
+**When not to use.** Do not use `primary` for mute, cancel, or row chrome. On light, `primary` fill fails 3:1 against canvas and card. No destructive-filled or destructive-tinted button — that pair fails AA on dark; Remove is `outline` and its confirm text carries the risk. No ghost text buttons.
 
 ## Input
 
@@ -36,7 +36,7 @@ Do not document product composites (the four alert cards). Those are the spec, n
 
 **Variants.** One. Select trigger shares this chrome.
 
-**Sizes.** One: `typography.ui`, `radius.control.default`, `spacing.scale.8` / `spacing.scale.12` padding.
+**Sizes.** One: `size.control.default` (40px) tall, `typography.ui`, `radius.control.default` (12px), `spacing.scale.8` / `spacing.scale.12` padding.
 
 **States.** Default — `color.surface.background`, `color.border.input`, `color.text.foreground`, placeholder `color.text.muted`. Focus — `color.border.ring`. Invalid — edge follows Field error (see open). Disabled — fade.
 
@@ -46,7 +46,7 @@ Do not document product composites (the four alert cards). Those are the spec, n
 
 ## Card
 
-**Identity.** Raised panel. `color.surface.card`, `color.text.card`, `radius.box.default`. No shadow (`shadow.glow.brand` is marketing CTA bloom).
+**Identity.** Raised panel. `color.surface.card`, `color.text.card`, `radius.box.default`. The rule card and every dialog are frames: `radius.frame.default` (40px), content on plates (`radius.plate.default`, 16px). No shadow (`shadow.glow.brand` is marketing CTA bloom).
 
 **Variants.** One surface. Title `typography.title`, supporting copy `typography.body` or `typography.ui` in `color.text.muted`.
 
@@ -84,7 +84,7 @@ Do not document product composites (the four alert cards). Those are the spec, n
 
 **When to use.** A single binary that takes effect now.
 
-**When not to use.** Multi-select — Checkbox. Opening a form — not this control (card footer **Set up** / **Edit**).
+**When not to use.** Multi-select — Checkbox. Opening a form — not this control (the card row's **Set up** / **Edit**).
 
 ## Checkbox
 
@@ -106,7 +106,7 @@ Do not document product composites (the four alert cards). Those are the spec, n
 
 **Variants.** One.
 
-**Sizes.** Trigger matches Input. Menu `color.surface.popover`, `color.text.popover`, `radius.box.default`, no brand glow.
+**Sizes.** Trigger matches Input (40px, 12px). Menus, popovers and select lists: solid `color.surface.popover`, `color.text.popover`, `radius.plate.default` (16px), hairline `color.border.default`, rows `radius.control.default` (12px), no glass.
 
 **States.** Trigger: same as Input, placeholder `color.text.muted`. Open: list. Highlighted row `color.surface.muted` (not citron). Chosen row may tick; label stays `color.text.foreground`. Focus — `color.border.ring`. Disabled — fade.
 

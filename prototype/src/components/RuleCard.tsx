@@ -1,136 +1,83 @@
-import type { ReactNode } from "react"
+import type { LucideIcon } from "lucide-react"
+import { Dialog as DialogPrimitive } from "radix-ui"
+import { useId, useRef, type ReactNode } from "react"
 
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Switch } from "@/components/ui/switch"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils"
+import { RuleCardFace } from "@/components/RuleCardFace"
+import { RuleModal } from "@/components/RuleModal"
+import type { ConnectionKind } from "@/lib/connections"
+import type { RuleCardStatus } from "@/lib/rule-card"
+import type { Channels } from "@/lib/rules"
+
+type RuleCardControls = {
+  expanded: boolean
+  sending: boolean
+  status: RuleCardStatus
+  channels: Channels
+  open: () => void
+  cancel: () => void
+  apply: () => void
+  toggleSending: (on: boolean) => void
+  setChannels: (channels: Channels) => void
+}
 
 type RuleCardProps = {
+  icon: LucideIcon
   title: string
   meaning: string
-  expanded: boolean
-  applied: boolean
-  sending: boolean
-  summary: ReactNode
-  onOpen: () => void
-  onCancel: () => void
-  onApply: () => void
-  onToggleSending: (on: boolean) => void
+  card: RuleCardControls
+  onConnectChannel: (kind: ConnectionKind) => void
+  /** Rendered in the open header, above the scroll. */
+  pinned?: ReactNode
   children: ReactNode
 }
 
+/** One rule: a card in the grid that grows into a modal and back. */
 export function RuleCard({
+  icon,
   title,
   meaning,
-  expanded,
-  applied,
-  sending,
-  summary,
-  onOpen,
-  onCancel,
-  onApply,
-  onToggleSending,
+  card,
+  onConnectChannel,
+  pinned,
   children,
 }: RuleCardProps) {
-  const titleBlock = (
-    <div className="min-w-0 flex-1 text-left">
-      <CardTitle>{title}</CardTitle>
-      <CardDescription className="mt-1">{meaning}</CardDescription>
-    </div>
-  )
+  const layoutId = useId()
+  const buttonRef = useRef<HTMLButtonElement>(null)
 
   return (
-    <Card className={cn(expanded && "overflow-visible")}>
-      <CardHeader className="grid-cols-[1fr_auto] items-start gap-3">
-        {expanded ? (
-          <div className="col-start-1 min-w-0">{titleBlock}</div>
-        ) : (
-          <div className="col-start-1 flex min-w-0 flex-col gap-2">
-            <button
-              type="button"
-              className="flex min-w-0 cursor-pointer items-start rounded-md text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-              onClick={onOpen}
-            >
-              {titleBlock}
-            </button>
-            {summary ? (
-              <div
-                className={cn(
-                  "min-w-0 cursor-pointer rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
-                  !sending && "opacity-70"
-                )}
-                onClick={onOpen}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault()
-                    onOpen()
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-              >
-                {summary}
-              </div>
-            ) : null}
-          </div>
-        )}
-        <CardAction className="row-start-1 flex items-center pt-0.5">
-          {applied ? (
-            <Switch
-              checked={sending}
-              onCheckedChange={onToggleSending}
-              aria-label={sending ? "Mute alerts" : "Unmute alerts"}
-            />
-          ) : (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span className="inline-flex">
-                  <Switch
-                    checked={false}
-                    disabled
-                    aria-label="Alerts off until the rule is set up"
-                  />
-                </span>
-              </TooltipTrigger>
-              <TooltipContent>Set up the rule first</TooltipContent>
-            </Tooltip>
-          )}
-        </CardAction>
-      </CardHeader>
-      {expanded ? (
-        <>
-          <CardContent className="flex flex-col gap-5 pb-16">
-            {children}
-          </CardContent>
-          <CardFooter className="sticky bottom-0 z-10 justify-end gap-2 bg-muted">
-            <Button type="button" variant="outline" onClick={onCancel}>
-              Cancel
-            </Button>
-            <Button type="button" onClick={onApply}>
-              Apply
-            </Button>
-          </CardFooter>
-        </>
-      ) : (
-        <CardFooter className="justify-end">
-          <Button type="button" variant="outline" onClick={onOpen}>
-            {applied ? "Edit" : "Set up"}
-          </Button>
-        </CardFooter>
-      )}
-    </Card>
+    <DialogPrimitive.Root
+      open={card.expanded}
+      onOpenChange={(next) => (next ? undefined : card.cancel())}
+    >
+      <RuleCardFace
+        layoutId={layoutId}
+        icon={icon}
+        title={title}
+        meaning={meaning}
+        expanded={card.expanded}
+        sending={card.sending}
+        status={card.status}
+        channels={card.channels}
+        buttonRef={buttonRef}
+        onOpen={card.open}
+        onToggleSending={card.toggleSending}
+        onChannels={card.setChannels}
+        onConnectChannel={onConnectChannel}
+      />
+      <RuleModal
+        open={card.expanded}
+        layoutId={layoutId}
+        icon={icon}
+        title={title}
+        meaning={meaning}
+        sending={card.sending}
+        onCancel={card.cancel}
+        onApply={card.apply}
+        onReturnFocus={() => buttonRef.current?.focus()}
+        pinned={pinned}
+      >
+        {children}
+      </RuleModal>
+    </DialogPrimitive.Root>
   )
 }

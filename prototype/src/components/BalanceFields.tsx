@@ -1,12 +1,14 @@
+import type { Dispatch, SetStateAction } from "react"
+import { useTranslation } from "react-i18next"
+
 import { AmountField } from "@/components/AmountField"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Field, FieldError } from "@/components/ui/field"
+import { FormPlate, FormRow, FormStack } from "@/components/FormGrid"
+import { OverflowText } from "@/components/OverflowText"
 import type { BalanceErrorKey, BalanceValues, FieldErrors } from "@/lib/rules"
-import { cn } from "@/lib/utils"
 
 type BalanceFieldsProps = {
   value: BalanceValues
-  onChange: (next: BalanceValues) => void
+  onChange: Dispatch<SetStateAction<BalanceValues>>
   invalid: FieldErrors<BalanceErrorKey>
 }
 
@@ -15,83 +17,62 @@ export function BalanceFields({
   onChange,
   invalid,
 }: BalanceFieldsProps) {
-  const pairInvalid = Boolean(invalid.directions)
+  const { t } = useTranslation()
 
   return (
-    <Field>
-      <div className="grid grid-cols-2">
-        <DirectionColumn
-          className="pr-4"
+    <FormStack>
+      <FormPlate>
+        <AmountRow
           id="balance-increase"
-          label="Increase by"
-          enabled={value.increaseEnabled}
-          amount={value.increaseAmount}
-          amountInvalid={Boolean(invalid.increaseAmount)}
-          pairInvalid={pairInvalid}
-          onEnabled={(increaseEnabled) =>
-            onChange({ ...value, increaseEnabled })
+          label={t("balance.increase")}
+          value={value.increaseAmount}
+          invalid={Boolean(invalid.increaseAmount)}
+          onChange={(increaseAmount) =>
+            onChange((current) => ({ ...current, increaseAmount }))
           }
-          onAmount={(increaseAmount) => onChange({ ...value, increaseAmount })}
         />
-        <DirectionColumn
-          className="border-l border-border pl-4"
+        <AmountRow
           id="balance-decrease"
-          label="Decrease by"
-          enabled={value.decreaseEnabled}
-          amount={value.decreaseAmount}
-          amountInvalid={Boolean(invalid.decreaseAmount)}
-          pairInvalid={pairInvalid}
-          onEnabled={(decreaseEnabled) =>
-            onChange({ ...value, decreaseEnabled })
+          label={t("balance.decrease")}
+          value={value.decreaseAmount}
+          invalid={Boolean(invalid.decreaseAmount)}
+          onChange={(decreaseAmount) =>
+            onChange((current) => ({ ...current, decreaseAmount }))
           }
-          onAmount={(decreaseAmount) => onChange({ ...value, decreaseAmount })}
         />
-      </div>
-      <FieldError>{invalid.directions ?? null}</FieldError>
-    </Field>
+      </FormPlate>
+    </FormStack>
   )
 }
 
-function DirectionColumn({
+function AmountRow({
   id,
   label,
-  enabled,
-  amount,
-  amountInvalid,
-  pairInvalid,
-  onEnabled,
-  onAmount,
-  className,
+  value,
+  invalid,
+  onChange,
 }: {
   id: string
   label: string
-  enabled: boolean
-  amount: string
-  amountInvalid: boolean
-  pairInvalid: boolean
-  onEnabled: (enabled: boolean) => void
-  onAmount: (amount: string) => void
-  className?: string
+  value: string
+  invalid: boolean
+  onChange: (value: string) => void
 }) {
   return (
-    <div className={cn("min-w-0", className)}>
-      <label className="mb-1.5 flex h-8 items-center gap-2 text-sm">
-        <Checkbox
-          checked={enabled}
-          onCheckedChange={(checked) => onEnabled(checked === true)}
-          aria-invalid={pairInvalid || undefined}
-          aria-label={label}
-        />
-        {label}
-      </label>
+    <FormRow
+      label={
+        <label htmlFor={id} className="min-w-0">
+          <OverflowText text={label} />
+        </label>
+      }
+    >
       <AmountField
         id={id}
-        value={amount}
-        onChange={onAmount}
-        invalid={amountInvalid}
-        disabled={!enabled}
+        value={value}
+        onChange={onChange}
+        invalid={invalid}
         errorSlot
       />
-    </div>
+    </FormRow>
   )
 }

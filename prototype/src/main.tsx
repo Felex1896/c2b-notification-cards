@@ -7,15 +7,20 @@ import {
   bootDocumentAppearance,
   ThemeProvider,
 } from "@/components/theme-provider.tsx"
+import { PrototypeProvider } from "@/components/PrototypeProvider"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { bootLanguage } from "@/i18n"
 
 bootDocumentAppearance()
+bootLanguage()
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
       <TooltipProvider>
-        <App />
+        <PrototypeProvider>
+          <App />
+        </PrototypeProvider>
       </TooltipProvider>
     </ThemeProvider>
   </StrictMode>

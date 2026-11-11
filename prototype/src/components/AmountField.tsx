@@ -1,20 +1,9 @@
-import { RotateCcwIcon } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
-import { Button } from "@/components/ui/button"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 import { amountPrefixClassName } from "@/lib/field-chrome"
-import {
-  commitAmountInput,
-  REQUIRED,
-  RESET_UNIQUE,
-  sanitizeAmountInput,
-} from "@/lib/rules"
+import { commitAmountInput, REQUIRED, sanitizeAmountInput } from "@/lib/rules"
 import { cn } from "@/lib/utils"
 
 type AmountFieldProps = {
@@ -25,7 +14,6 @@ type AmountFieldProps = {
   invalid?: boolean
   placeholder?: string
   disabled?: boolean
-  onReset?: () => void
   errorSlot?: boolean
 }
 
@@ -35,12 +23,11 @@ export function AmountField({
   value,
   onChange,
   invalid = false,
-  placeholder = "e.g. 10000",
+  placeholder,
   disabled = false,
-  onReset,
   errorSlot,
 }: AmountFieldProps) {
-  const showReset = Boolean(onReset) && !disabled
+  const { t } = useTranslation()
   const showErrorSlot = errorSlot ?? label != null
 
   return (
@@ -48,7 +35,7 @@ export function AmountField({
       {label ? <FieldLabel htmlFor={id}>{label}</FieldLabel> : null}
       <div className="flex min-w-0">
         <span className={cn(amountPrefixClassName, disabled && "opacity-50")}>
-          EUR
+          {t("amount.currency")}
         </span>
         <Input
           id={id}
@@ -72,30 +59,13 @@ export function AmountField({
             }
           }}
           aria-invalid={invalid || undefined}
-          placeholder={placeholder}
+          placeholder={placeholder ?? t("amount.placeholder")}
           disabled={disabled}
-          className={cn("rounded-l-none", showReset && "rounded-r-none")}
+          className="rounded-l-none"
         />
-        {showReset ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                className="rounded-l-none border-l-0"
-                onClick={onReset}
-                aria-label={RESET_UNIQUE}
-              >
-                <RotateCcwIcon />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>{RESET_UNIQUE}</TooltipContent>
-          </Tooltip>
-        ) : null}
       </div>
       {showErrorSlot ? (
-        <FieldError>{invalid ? REQUIRED : null}</FieldError>
+        <FieldError>{invalid ? t(REQUIRED) : null}</FieldError>
       ) : null}
     </Field>
   )

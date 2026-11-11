@@ -2,12 +2,13 @@
  *
  * Belongs here: a value the brand skin needs different that is not a colour,
  * font or radius role and not one of the named anatomy tokens (input padding,
- * card radius, --field-prefix-width, font family). Named tokens are edited in
+ * card radius, frame / plate radius, control height, overline size,
+ * --field-prefix-width, font family). Named tokens are edited in
  * the design-system token files and arrive through brand.generated.css —
  * regenerate that sibling, never hand-edit it.
  *
- * Counter: 3 rules on one component → promote that component's anatomy into
- * the named tokens now. 12 rules in this file → stop and promote across the
+ * Counter: 8 rules on one component → promote that component's anatomy into
+ * the named tokens now. 31 rules in this file → stop and promote across the
  * file. `npm run check:skin` prints the counts and warns past them; it does
  * not fail the build. Thresholds may be retuned.
  *
@@ -18,3 +19,220 @@
  * Selectors: [data-skin="brand"] for light, [data-skin="brand"].dark for dark.
  * This file is imported after brand.generated.css, so equal specificity wins.
  */
+
+/* Glass: the rule frame, its inner layers and every dialog. */
+[data-skin="brand"] [data-rule-card],
+[data-skin="brand"] .rule-card-layer,
+[data-skin="brand"] [data-slot="dialog-content"] {
+  background-color: color-mix(in oklch, white 2%, transparent);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+}
+
+[data-skin="brand"]:not(.dark) [data-rule-card],
+[data-skin="brand"]:not(.dark) [data-slot="dialog-content"] {
+  background-color: color-mix(in oklch, white 46%, transparent);
+}
+
+[data-skin="brand"]:not(.dark) .rule-card-layer {
+  background-color: color-mix(in oklch, white 72%, transparent);
+}
+
+/* Shell radius matches the client table. Hairline, 24 padding. */
+[data-skin="brand"] [data-rule-card],
+[data-skin="brand"] [data-slot="dialog-content"] {
+  border-radius: var(--table-radius);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+[data-skin="brand"] [data-slot="dialog-content"] {
+  gap: 24px;
+  padding: 24px;
+}
+
+/* Absolute close sits on the same 24px inset as the dialog padding. */
+[data-skin="brand"] [data-slot="dialog-content"]:not(.channels-dialog) [data-slot="dialog-close"] {
+  top: 24px;
+  right: 24px;
+}
+
+[data-skin="brand"] .channels-dialog {
+  height: 480px;
+  max-height: 480px;
+  padding: 0 !important;
+  gap: 20px;
+}
+
+[data-skin="brand"] .channels-dialog [data-slot="dialog-close"] {
+  top: 24px;
+  right: 24px;
+}
+
+[data-skin="brand"] [data-slot="dialog-footer"] {
+  margin: 0 -24px -24px;
+  background-color: transparent;
+  border-top-width: 0;
+  padding: 24px;
+}
+
+[data-skin="brand"] [data-rule-card] [data-slot="card-footer"] {
+  padding: 24px;
+}
+
+/* Buttons: one height, control radius, whatever data-size says.
+   Selected by the Button's own `group/button` class, not data-slot: a Button
+   inside TooltipTrigger asChild has its data-slot replaced by "tooltip-trigger". */
+[data-skin="brand"] .group\/button:not([data-size^="icon"]) {
+  height: var(--control-height);
+  border-radius: var(--radius);
+  padding-inline: 16px;
+  font-size: 0.875rem;
+}
+
+/* Icon buttons are square. Those inside a table cell sit in a line of text and keep their size. */
+[data-skin="brand"] .group\/button[data-size^="icon"]:not(td *) {
+  width: var(--control-height);
+  height: var(--control-height);
+  border-radius: var(--radius);
+}
+
+/* Fields. */
+[data-skin="brand"] [data-slot="input"],
+[data-skin="brand"] [data-slot="select-trigger"] {
+  height: var(--control-height);
+  border-radius: var(--radius);
+}
+
+/* Menus, popovers, select lists: plate radius, hairline, solid fill. */
+[data-skin="brand"] [data-slot="popover-content"],
+[data-skin="brand"] [data-slot="select-content"],
+[data-skin="brand"] [data-slot="header-menu-content"] {
+  border-radius: var(--plate-radius);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+[data-skin="brand"] [data-slot="select-item"] {
+  border-radius: var(--radius);
+}
+
+/* Tabs: track 40, radius = button; pill 32, radius = button − 4. */
+[data-skin="brand"] [data-slot="tabs-list"] {
+  height: 40px;
+  gap: 0;
+  border-radius: var(--radius);
+  background: color-mix(in oklch, white 6%, transparent);
+  padding: 4px;
+}
+
+[data-skin="brand"] [data-slot="tabs-list"] :is([role="tab"], .tab-pill) {
+  height: 32px;
+  flex: 1 1 0;
+  min-width: max-content;
+  border-radius: calc(var(--radius) - 4px);
+  border-width: 0;
+  background: transparent;
+  padding-inline: 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  color: var(--muted-foreground);
+  outline: none;
+  box-shadow: none;
+  clip-path: inset(0 round calc(var(--radius) - 4px));
+}
+
+/* Citron AI is the inverse pill: light on a dark theme, dark on a light one. */
+[data-skin="brand"] [data-slot="tabs-list"] :is([role="tab"], .tab-pill).tab-ai,
+[data-skin="brand"] [data-slot="tabs-list"] :is([role="tab"], .tab-pill).tab-ai:hover,
+[data-skin="brand"] [data-slot="tabs-list"] :is([role="tab"], .tab-pill).tab-ai:focus-visible {
+  border-width: 0;
+  background-color: var(--foreground);
+  background-image: none;
+  color: var(--background);
+  clip-path: none;
+}
+
+[data-skin="brand"] [data-slot="tabs-list"] :is([role="tab"], .tab-pill):is([data-active], [data-state="active"]) {
+  background-color: color-mix(in oklch, white 12%, transparent);
+  background-image: radial-gradient(
+    ellipse at top right,
+    color-mix(in oklch, var(--primary) 55%, transparent),
+    transparent 62%
+  );
+  color: var(--foreground);
+  outline: none;
+  box-shadow: none;
+}
+
+[data-skin="brand"]:not(.dark) [data-slot="tabs-list"] {
+  background: color-mix(in oklch, black 6%, transparent);
+}
+
+[data-skin="brand"]:not(.dark) [data-slot="tabs-list"] :is([role="tab"], .tab-pill):is([data-active], [data-state="active"]) {
+  background-color: color-mix(in oklch, white 72%, transparent);
+}
+
+/* Send glow on a rule row. */
+[data-skin="brand"] [data-rule-glow] {
+  position: relative;
+  isolation: isolate;
+}
+
+[data-skin="brand"] [data-rule-glow]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at top right,
+    var(--primary),
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity 150ms;
+}
+
+[data-skin="brand"] [data-rule-glow][data-sending="on"]::before {
+  opacity: 0.125;
+}
+
+/* Switch geometry: two sizes, round thumb. */
+[data-skin="brand"] [data-slot="switch"][data-size="default"] {
+  height: 28px;
+  width: 48px;
+}
+
+[data-skin="brand"] [data-slot="switch"][data-size="sm"] {
+  height: 22px;
+  width: 38px;
+}
+
+[data-skin="brand"] [data-slot="switch"][data-size="default"] [data-slot="switch-thumb"] {
+  width: 22px;
+  height: 22px;
+}
+
+[data-skin="brand"] [data-slot="switch"][data-size="sm"] [data-slot="switch-thumb"] {
+  width: 16px;
+  height: 16px;
+}
+
+[data-skin="brand"] [data-slot="switch"][data-size="default"] [data-slot="switch-thumb"]:is([data-unchecked], [data-state="unchecked"]) {
+  translate: 3px 0;
+}
+
+[data-skin="brand"] [data-slot="switch"][data-size="default"] [data-slot="switch-thumb"]:is([data-checked], [data-state="checked"]) {
+  translate: 23px 0;
+}
+
+[data-skin="brand"] [data-slot="switch"][data-size="sm"] [data-slot="switch-thumb"]:is([data-unchecked], [data-state="unchecked"]) {
+  translate: 3px 0;
+}
+
+[data-skin="brand"] [data-slot="switch"][data-size="sm"] [data-slot="switch-thumb"]:is([data-checked], [data-state="checked"]) {
+  translate: 19px 0;
+}

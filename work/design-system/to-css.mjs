@@ -53,6 +53,17 @@ const ROLE_TO_VAR = [
   ["--chart-3", "color.neutral.41"],
   ["--chart-4", "color.neutral.20"],
   ["--chart-5", "color.neutral.15"],
+  ["--activity-night", "color.activity.night"],
+  ["--activity-night-bg", "color.activity.night-bg"],
+  ["--activity-morning", "color.activity.morning"],
+  ["--activity-morning-bg", "color.activity.morning-bg"],
+  ["--activity-day", "color.activity.day"],
+  ["--activity-day-bg", "color.activity.day-bg"],
+  ["--activity-evening", "color.activity.evening"],
+  ["--activity-evening-bg", "color.activity.evening-bg"],
+  ["--table-header", "color.table.header"],
+  ["--table-row-hover", "color.table.row-hover"],
+  ["--table-row-glow", "color.table.row-glow"],
 ];
 
 /** Anatomy the brand skin owns. Same in light and dark. */
@@ -60,9 +71,15 @@ const ANATOMY_TO_VAR = [
   ["--font-family-sans", "typography.family.sans"],
   ["--radius", "radius.control.default"],
   ["--card-radius", "radius.box.default"],
+  ["--frame-radius", "radius.frame.default"],
+  ["--plate-radius", "radius.plate.default"],
+  ["--control-height", "size.control.default"],
+  ["--overline-size", "typography.size.overline"],
   ["--field-prefix-width", "spacing.field.prefix"],
   ["--input-padding-y", "spacing.scale.8"],
   ["--input-padding-x", "spacing.scale.12"],
+  ["--table-radius", "radius.table.shell"],
+  ["--table-header-radius", "radius.table.header"],
 ];
 
 function deepMerge(base, overlay) {

@@ -12,7 +12,7 @@ Read [sources.md](./sources.md) first — precedence and modes live there. These
 | Path | Contains | Triggers |
 | --- | --- | --- |
 | [sources.md](./sources.md) | Inputs, precedence, two modes, dark default | sources, landing, modes, theme |
-| [tokens.md](./tokens.md) | Roles, application rules, contrast, open list | tokens, contrast, palette, Inter |
+| [tokens.md](./tokens.md) | Roles, application rules, contrast, open list | tokens, contrast, palette, Golos Text |
 | [tokens.json](./tokens.json) | Primitive values and dark semantics | tokens.json, oklch, dark |
 | [tokens.light.json](./tokens.light.json) | Light semantic colours | light theme, invert |
 | [components.md](./components.md) | Button, Input, Card, Badge, Switch, Checkbox, Select, Field error | components, button, switch, checkbox |

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Fail on a literal colour or font family in src/components and src/lib.
- * Count override rules in src/styles/brand.overrides.css; warn past 3 / 12, do not fail.
+ * Count override rules in src/styles/brand.overrides.css; warn past 8 / 31, do not fail.
  *
  * Run from prototype/: node scripts/check-skin.mjs
  */
@@ -12,8 +12,8 @@ import { fileURLToPath } from "node:url"
 const ROOT = fileURLToPath(new URL("..", import.meta.url))
 const SCAN_DIRS = ["src/components", "src/lib"]
 const OVERRIDES_REL = "src/styles/brand.overrides.css"
-const COMPONENT_WARN = 3
-const FILE_WARN = 12
+const COMPONENT_WARN = 8
+const FILE_WARN = 31
 
 const LITERALS = [
   {

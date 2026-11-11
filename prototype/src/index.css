@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
-@import "@fontsource-variable/inter";
+@import "@fontsource-variable/golos-text";
 @import "./styles/brand.generated.css";
 @import "./styles/brand.overrides.css";
 
@@ -42,27 +42,50 @@
     --color-card: var(--card);
     --color-foreground: var(--foreground);
     --color-background: var(--background);
+    --color-activity-night: var(--activity-night);
+    --color-activity-night-bg: var(--activity-night-bg);
+    --color-activity-morning: var(--activity-morning);
+    --color-activity-morning-bg: var(--activity-morning-bg);
+    --color-activity-day: var(--activity-day);
+    --color-activity-day-bg: var(--activity-day-bg);
+    --color-activity-evening: var(--activity-evening);
+    --color-activity-evening-bg: var(--activity-evening-bg);
+    --color-table-header: var(--table-header);
+    --color-table-row-hover: var(--table-row-hover);
+    --color-table-row-glow: var(--table-row-glow);
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-xl: var(--plate-radius);
     --radius-2xl: calc(var(--radius) * 1.8);
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
+    --radius-table: var(--table-radius);
+    --radius-table-header: var(--table-header-radius);
 }
 
-:root {
+:where(:root) {
     --radius: 0.625rem;
+    /* Stock shadcn values; brand takes the named tokens from brand.generated.css.
+       :where() keeps these at zero specificity so [data-skin="brand"] wins. */
+    --plate-radius: calc(var(--radius) * 1.4);
+    --frame-radius: calc(var(--radius) * 2.6);
+    --control-height: 2rem;
+    --overline-size: 11px;
     /* Brand FOUC fallbacks; sandbox overrides below. Generated CSS owns brand colours. */
     --field-prefix-width: 112px;
     --input-padding-y: 8px;
     --input-padding-x: 12px;
     --card-radius: 12px;
-    --font-family-sans: "Inter Variable", sans-serif;
+    --table-radius: 16px;
+    --table-header-radius: 8px;
+    --font-family-sans: "Golos Text Variable", sans-serif;
+    --chrome-height: 0px;
+    --band-height: 0px;
 }
 
 [data-skin="brand"] {
-    --font-family-sans: "Inter Variable", sans-serif;
+    --font-family-sans: "Golos Text Variable", sans-serif;
 }
 
 [data-skin="sandbox"] {
@@ -102,6 +125,19 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
+    --table-radius: 16px;
+    --table-header-radius: 8px;
+    --activity-night: oklch(0.450 0.150 277);
+    --activity-night-bg: oklch(0.945 0.022 277);
+    --activity-morning: oklch(0.460 0.090 72);
+    --activity-morning-bg: oklch(0.945 0.040 72);
+    --activity-day: oklch(0.450 0.085 230);
+    --activity-day-bg: oklch(0.945 0.030 230);
+    --activity-evening: oklch(0.470 0.125 35);
+    --activity-evening-bg: oklch(0.940 0.025 35);
+    --table-header: oklch(0 0 0 / 0.05);
+    --table-row-hover: oklch(0 0 0 / 0.06);
+    --table-row-glow: oklch(0.205 0 0 / 0.22);
 }
 
 [data-skin="sandbox"].dark {
@@ -136,6 +172,17 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+    --activity-night: oklch(0.780 0.100 277);
+    --activity-night-bg: oklch(0.320 0.065 277);
+    --activity-morning: oklch(0.800 0.140 72);
+    --activity-morning-bg: oklch(0.340 0.060 72);
+    --activity-day: oklch(0.790 0.115 230);
+    --activity-day-bg: oklch(0.330 0.055 230);
+    --activity-evening: oklch(0.780 0.115 35);
+    --activity-evening-bg: oklch(0.320 0.065 35);
+    --table-header: oklch(1 0 0 / 0.08);
+    --table-row-hover: oklch(1 0 0 / 0.10);
+    --table-row-glow: oklch(0.922 0 0 / 0.40);
 }
 
 @layer base {
@@ -148,4 +195,53 @@
   html {
     @apply font-sans;
     }
+}
+
+/* Dark: 2% white plates, 8% white lines. Light: darker page, higher plate lighter, 8% black lines. */
+[data-skin="brand"].dark,
+[data-skin="sandbox"].dark,
+.dark {
+  --border: color-mix(in oklch, white 8%, transparent);
+  --input: color-mix(in oklch, white 8%, transparent);
+  --rule-line: color-mix(in oklch, white 8%, transparent);
+}
+
+[data-skin="brand"]:not(.dark),
+[data-skin="sandbox"]:not(.dark) {
+  --background: oklch(0.9 0 0);
+  --border: color-mix(in oklch, black 8%, transparent);
+  --input: color-mix(in oklch, black 8%, transparent);
+  --rule-line: color-mix(in oklch, black 8%, transparent);
+}
+
+.rule-line {
+  border-color: var(--rule-line);
+}
+
+/* Sandbox: the rule frame and modal carry bg-transparent (ruleFrameClass), so
+   stock fills come from here. Brand paints glass in brand.overrides.css. */
+[data-skin="sandbox"] [data-rule-card] {
+  background-color: var(--card);
+  /* Motion geometry matches the table shell, same as RuleModal. Not a skin look. */
+  border-radius: var(--table-radius);
+}
+
+[data-skin="sandbox"] .rule-card-layer {
+  background-color: var(--muted);
+}
+
+/* Layout helper shared by both skins. */
+[data-rule-meaning] {
+  min-height: var(--rule-meaning-height, auto);
+}
+
+/* The row scroller's bar is hidden; a drawn thumb is the one on screen.
+   The bar element still carries the shared scrollLeft. */
+.table-x-body,
+.table-x-bar {
+  scrollbar-width: none;
+}
+.table-x-body::-webkit-scrollbar,
+.table-x-bar::-webkit-scrollbar {
+  display: none;
 }

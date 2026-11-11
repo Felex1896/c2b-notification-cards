@@ -1,6 +1,6 @@
 # C2B notification cards
 
-This repository is an **intermediate snapshot**, not the final handoff. The four alert cards are clickable. The visual pass and the longer flow around this page are still open.
+Snapshot for review. The clickable prototype covers the whole setup: an empty brand, a sample wallet file, the client list, and the four alert rules. English and Russian. Two skins.
 
 **Live prototype:** https://felex1896.github.io/c2b-notification-cards-demo/
 
@@ -12,7 +12,7 @@ npm install
 npm run dev
 ```
 
-Default skin is brand (Inter, dark). Switch with `?skin=` or the toolbar.
+Default skin is brand (Golos Text, dark). Switch with `?skin=` or the toolbar. Language follows the browser, or `?lang=en` / `?lang=ru`.
 
 ## What's here
 

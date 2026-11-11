@@ -1,3 +1,5 @@
+import type { MessageKey } from "@/i18n/keys"
+
 export type Brand = {
   id: string
   name: string
@@ -5,7 +7,7 @@ export type Brand = {
 
 export type Category = {
   id: string
-  name: string
+  nameKey: MessageKey
   brands: Brand[]
 }
 
@@ -14,11 +16,11 @@ export type Chat = {
   name: string
 }
 
-// Names from work/catalog.md
+// Names from assignments/c2b-analytics/catalog.md; category names live in the dictionaries.
 export const CATEGORIES: Category[] = [
   {
     id: "exchange",
-    name: "Exchange",
+    nameKey: "category.exchange",
     brands: [
       { id: "001k-bot", name: "001k.bot" },
       { id: "amina-bank", name: "AMINA Bank" },
@@ -197,7 +199,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     id: "cryptoprocessing",
-    name: "Cryptoprocessing",
+    nameKey: "category.cryptoprocessing",
     brands: [
       { id: "0xprocessing-com", name: "0xProcessing.com" },
       { id: "alphapo", name: "AlphaPo" },
@@ -227,7 +229,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     id: "gambling",
-    name: "Gambling",
+    nameKey: "category.gambling",
     brands: [
       { id: "1win-com", name: "1win.com" },
       { id: "1xbet", name: "1xbet" },
@@ -315,7 +317,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     id: "forex",
-    name: "Forex",
+    nameKey: "category.forex",
     brands: [
       { id: "amarkets-com", name: "AMarkets.com" },
       { id: "capital-com", name: "Capital.com" },
@@ -335,7 +337,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     id: "bridge",
-    name: "Bridge",
+    nameKey: "category.bridge",
     brands: [
       { id: "across-to", name: "Across.to" },
       { id: "allbridge-io", name: "Allbridge.io" },
@@ -354,7 +356,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     id: "institutional-platform",
-    name: "Institutional platform",
+    nameKey: "category.institutionalPlatform",
     brands: [
       { id: "anchorage-com", name: "Anchorage.com" },
       { id: "b2c2-com", name: "B2C2.com" },
@@ -365,7 +367,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     id: "lootbox-and-case-opening",
-    name: "Lootbox & Case Opening",
+    nameKey: "category.lootboxAndCaseOpening",
     brands: [
       { id: "b-site", name: "B.site" },
       { id: "csgoempire-com", name: "CSGOEmpire.com" },
@@ -383,7 +385,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     id: "darknet-market",
-    name: "Darknet market",
+    nameKey: "category.darknetMarket",
     brands: [
       { id: "blacksprut-market", name: "Blacksprut Market" },
       { id: "kraken-market", name: "Kraken Market" },
@@ -392,7 +394,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     id: "other",
-    name: "Other",
+    nameKey: "category.other",
     brands: [
       { id: "btcc", name: "Btcc" },
       { id: "freecash-com", name: "FreeCash.com" },
@@ -402,7 +404,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     id: "hosted-wallet",
-    name: "Hosted wallet",
+    nameKey: "category.hostedWallet",
     brands: [
       { id: "cwallet-com", name: "CWallet.com" },
       { id: "wallet-tg", name: "Wallet.tg" },
@@ -411,12 +413,12 @@ export const CATEGORIES: Category[] = [
   },
   {
     id: "asset-management",
-    name: "Asset Management",
+    nameKey: "category.assetManagement",
     brands: [{ id: "chainup-custody", name: "Chainup Custody" }],
   },
   {
     id: "dex",
-    name: "Dex",
+    nameKey: "category.dex",
     brands: [
       { id: "li-fi", name: "LI.FI" },
       { id: "mayan-finance", name: "Mayan Finance" },
@@ -429,30 +431,38 @@ export const CATEGORIES: Category[] = [
   },
   {
     id: "mixer",
-    name: "Mixer",
+    nameKey: "category.mixer",
     brands: [{ id: "railgun-ch", name: "Railgun.ch" }],
   },
   {
     id: "lending",
-    name: "Lending",
+    nameKey: "category.lending",
     brands: [{ id: "staked-usdt", name: "Staked USDT" }],
   },
   {
     id: "mining-pool",
-    name: "Mining pool",
+    nameKey: "category.miningPool",
     brands: [{ id: "viabtc-com", name: "ViaBTC.com" }],
   },
 ]
 
+export const SLACK_WORKSPACE = "Acme Ops"
+
 export const SLACK_CHATS: Chat[] = [
   { id: "slack-c2b", name: "#c2b-alerts" },
   { id: "slack-ops", name: "#ops" },
+  { id: "slack-payments", name: "#payments" },
 ]
 
+/** In the order the mock bot finds them. */
 export const TELEGRAM_CHATS: Chat[] = [
+  { id: "tg-risk", name: "Risk team" },
   { id: "tg-c2b", name: "C2B Alerts" },
   { id: "tg-night", name: "Night on-call" },
 ]
+
+export const TELEGRAM_BOT = "@CitronAlertsBot"
+export const TELEGRAM_CONNECT_COMMAND = "/connect 4821"
 
 export const ALL_BRAND_IDS = CATEGORIES.flatMap((category) =>
   category.brands.map((brand) => brand.id)

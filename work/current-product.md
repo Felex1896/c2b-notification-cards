@@ -12,6 +12,8 @@ sources:
 
 Facts from walking [ctrn.pro](https://ctrn.pro/) (Analytics) and [docs.citrn.io](https://docs.citrn.io/) (Processing). Not the redesign. Target screens: [target-flow.md](./specs/target-flow.md).
 
+Two walks. Everything above [Re-walk 2026-10-31](#re-walk-2026-10-31) is the first walk; where they disagree, the re-walk wins.
+
 ## Two products
 
 **Citron Analytics** (`ctrn.pro`) — watches addresses the admin already has. Does not mint wallets.
@@ -149,6 +151,52 @@ Thresholds compared in **EUR**.
 - Entity column: many brands → `All` dropdown (disabled until category on). One brand (Mixer → Railgun.ch, Lending → Staked USDT, …) → child checkbox. Checking Mixer checks Railgun (category = all children). Looks like two independent choices.
 - Help on balance-change talks about Add/Manage while another state is a single amount field.
 - Toggle, saved rule, and channel are disconnected: rule can exist while off and with no chat — nothing sends.
+
+## Re-walk 2026-10-31
+
+Screenshots: [specs/whole-flow/citron-refs/](./specs/whole-flow/citron-refs/). Same account, same three clients. Whether the CSV was re-uploaded between walks is unknown — numbers moved a lot (1002 now dominates, 1003 did before).
+
+### Header
+
+Right side on C2B: **Brands** switcher (`All brands`, avatar `M`), profile icon, plan **Basic**. Not shown on the Profile pages.
+
+### Client list
+
+[c2b-client-list.png](./specs/whole-flow/citron-refs/c2b-client-list.png). Columns renamed and now filled: Client ID, Balance (sorted desc), Annual turnover, Turnover w/ us, Activity, Currency, Main wallet, Top entity. Filter icon on every column except Client ID. Client/Partner search next to the tabs. No topup banner in the shot.
+
+| ID | Balance | Annual turnover | Turnover w/ us | Activity | Currency | Main wallet | Top entity |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1002 | 239 057 090 EUR | 13 415 138 242 EUR | 12 665 063 732 EUR | 00–06 CET | ETH | `0x7d9557…2ef11` | My Company |
+| 1004 | 4 EUR | 1 078 EUR | 231 EUR | 00–06 CET | ETH | `0xf41068…5efef` | `0xf5b7b7…22d75` |
+| 1003 | 1 EUR | 69 044 EUR | 0 EUR | 12–18 CET | ETH | `0xbe7c4b…6eb9b` | Kraken |
+
+Activity is now a CET hour range with a coloured dot (red for 00–06, yellow for 12–18), not Morning / Night.
+
+### Overview
+
+[1](./specs/whole-flow/citron-refs/c2b-overview-1-totals-clients-entities.png), [2](./specs/whole-flow/citron-refs/c2b-overview-2-turnover-activity-balance.png), [3](./specs/whole-flow/citron-refs/c2b-overview-3-activity-balance-with-us.png), [4](./specs/whole-flow/citron-refs/c2b-overview-4-with-us-deposits-by-network.png) — one page in four scrolls. New: **Edit dashboard** button, **Deposits by network** widget. Each widget still has its own Week / Month / Year; rankings keep Top 5 / Top 10 and **Show All**. Info icon on every widget.
+
+| Widget | Week (as captured) |
+| --- | --- |
+| Total deposits to all our companies | 160.5M EUR |
+| Total withdraws from our companies | 190 964 EUR |
+| Clients by Turnover | 1002 175 331 845 EUR |
+| Entity by turnover with our clients | Kraken 91 911 867, Relay.link 809 416, Coinbase 556 485, Binance 548 327, Stake.com 251 920 (EUR) |
+| Clients by Activity | 1002 amount 18426, Night |
+| Clients by Balance | 1002 239 057 090, 1004 4, 1003 2 (EUR) |
+| Turnover with Our Companies | 1002 160 646 519 EUR |
+| Deposits by network | Ethereum 160 490 574 EUR, share 100.00%, 13 337 transactions |
+
+Disagreements inside one walk: 1003 balance is 1 EUR on the list, 2 EUR on Overview. Activity is a CET range on the list, `Night` on Overview.
+
+### Notification settings
+
+[profile-notification-settings.png](./specs/whole-flow/citron-refs/profile-notification-settings.png). Still under Profile: tabs **Profile / Notifications / Support**. Page title **Notification settings**. Button **Delivery Channels** top right.
+
+- **Brand scope.** Row `BRAND` + chip `My Company` + “Settings below apply to My Company only”. Rules are per brand, not company-wide.
+- **Email** is a channel. Each rule row: toggle, icon, title, one-line description, three channel buttons **Email / Slack / Telegram** (greyed while the rule is off), gear icon. No Setup button visible.
+- Titles: Client wallet balance change, Client entity withdrawal, Client entity deposit, First deposit.
+- First deposit copy: “Full client information when the client makes their first deposit. Both rules must pass (AND): minimum wallet balance and minimum turnover (in the project's display currency) over the configured period; with selected entities/categories if set, otherwise across all client wallets.” Guess: “project's display currency” means thresholds may no longer be fixed to EUR. Forms behind the gear not opened.
 
 ## What another chat should not assume
 

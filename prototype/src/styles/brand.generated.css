@@ -1,19 +1,25 @@
 /* generated, never hand-edit; run `node work/design-system/to-css.mjs` from repo root */
 
 [data-skin="brand"] {
-  --font-family-sans: Inter, sans-serif;
-  --radius: 10px;
+  --font-family-sans: "Golos Text", sans-serif;
+  --radius: 12px;
   --card-radius: 12px;
+  --frame-radius: 40px;
+  --plate-radius: 16px;
+  --control-height: 40px;
+  --overline-size: 11px;
   --field-prefix-width: 112px;
   --input-padding-y: 8px;
   --input-padding-x: 12px;
+  --table-radius: 16px;
+  --table-header-radius: 8px;
   --background: oklch(0.961 0 0);
   --foreground: oklch(0.159 0 0);
   --card: oklch(0.931 0 0);
   --card-foreground: oklch(0.159 0 0);
   --popover: oklch(0.931 0 0);
   --popover-foreground: oklch(0.159 0 0);
-  --primary: oklch(0.958 0.214 113.485);
+  --primary: oklch(0.866 0.1872 108.408);
   --primary-foreground: oklch(0.159 0 0);
   --secondary: oklch(0.901 0 0);
   --secondary-foreground: oklch(0.159 0 0);
@@ -25,20 +31,31 @@
   --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(0.885 0 0);
   --input: oklch(0.885 0 0);
-  --ring: oklch(0.958 0.214 113.485);
+  --ring: oklch(0.866 0.1872 108.408);
   --sidebar: oklch(0.931 0 0);
   --sidebar-foreground: oklch(0.159 0 0);
-  --sidebar-primary: oklch(0.958 0.214 113.485);
+  --sidebar-primary: oklch(0.866 0.1872 108.408);
   --sidebar-primary-foreground: oklch(0.159 0 0);
   --sidebar-accent: oklch(0.901 0 0);
   --sidebar-accent-foreground: oklch(0.159 0 0);
   --sidebar-border: oklch(0.885 0 0);
-  --sidebar-ring: oklch(0.958 0.214 113.485);
+  --sidebar-ring: oklch(0.866 0.1872 108.408);
   --chart-1: oklch(0.845 0 0);
   --chart-2: oklch(0.600 0 0);
   --chart-3: oklch(0.517 0 0);
   --chart-4: oklch(0.321 0 0);
   --chart-5: oklch(0.269 0 0);
+  --activity-night: oklch(0.450 0.150 277);
+  --activity-night-bg: oklch(0.945 0.022 277);
+  --activity-morning: oklch(0.460 0.090 72);
+  --activity-morning-bg: oklch(0.945 0.040 72);
+  --activity-day: oklch(0.450 0.085 230);
+  --activity-day-bg: oklch(0.945 0.030 230);
+  --activity-evening: oklch(0.470 0.125 35);
+  --activity-evening-bg: oklch(0.940 0.025 35);
+  --table-header: oklch(0 0 0 / 0.05);
+  --table-row-hover: oklch(0 0 0 / 0.06);
+  --table-row-glow: oklch(0.866 0.1872 108.408 / 0.45);
 }
 
 [data-skin="brand"].dark {
@@ -74,4 +91,15 @@
   --chart-3: oklch(0.517 0 0);
   --chart-4: oklch(0.321 0 0);
   --chart-5: oklch(0.269 0 0);
+  --activity-night: oklch(0.780 0.100 277);
+  --activity-night-bg: oklch(0.320 0.065 277);
+  --activity-morning: oklch(0.800 0.140 72);
+  --activity-morning-bg: oklch(0.340 0.060 72);
+  --activity-day: oklch(0.790 0.115 230);
+  --activity-day-bg: oklch(0.330 0.055 230);
+  --activity-evening: oklch(0.780 0.115 35);
+  --activity-evening-bg: oklch(0.320 0.065 35);
+  --table-header: oklch(1 0 0 / 0.08);
+  --table-row-hover: oklch(1 0 0 / 0.10);
+  --table-row-glow: oklch(0.958 0.214 113.485 / 0.40);
 }

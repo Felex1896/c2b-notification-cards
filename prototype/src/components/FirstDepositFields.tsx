@@ -1,8 +1,10 @@
-import type { Dispatch, SetStateAction } from "react"
+import type { Dispatch, ReactNode, SetStateAction } from "react"
+import { useTranslation } from "react-i18next"
 
 import { AmountField } from "@/components/AmountField"
 import { CategoryBrandPicker } from "@/components/CategoryBrandPicker"
-import { RuleTableCell } from "@/components/RuleTable"
+import { FormRow } from "@/components/FormGrid"
+import { OverflowText } from "@/components/OverflowText"
 import { Field, FieldLabel } from "@/components/ui/field"
 import {
   Select,
@@ -12,25 +14,30 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { CATEGORIES } from "@/data/catalog"
+import type { MessageKey } from "@/i18n/keys"
 import {
-  subRuleForCategory,
-  type FirstDepositErrors,
-  type FirstDepositSubRule,
-  type FirstDepositValues,
-  type Period,
+  patchCategorySubRule,
+  selectedBrandIds,
+  syncSubRules,
+} from "@/lib/sub-rules"
+import type {
+  FirstDepositErrors,
+  FirstDepositValues,
+  Period,
 } from "@/lib/rules"
 import { applySelection } from "@/lib/selection"
+
+const PERIODS = [
+  ["day", "period.day"],
+  ["week", "period.week"],
+  ["month", "period.month"],
+  ["year", "period.year"],
+] as const satisfies ReadonlyArray<readonly [Period, MessageKey]>
 
 type FirstDepositFieldsProps = {
   value: FirstDepositValues
   onChange: Dispatch<SetStateAction<FirstDepositValues>>
-  invalid: Partial<FirstDepositErrors>
-}
-
-/** The picker speaks brand ids; this card stores them per sub-rule. */
-function selectedBrandIds(values: FirstDepositValues): string[] {
-  return values.subRules.flatMap((row) => row.brandIds)
+  invalid: FirstDepositErrors
 }
 
 export function FirstDepositFields({
@@ -38,15 +45,13 @@ export function FirstDepositFields({
   onChange,
   invalid,
 }: FirstDepositFieldsProps) {
-  const subRuleFor = (categoryId: string) =>
-    value.subRules.find((row) => row.categoryId === categoryId)
-
-  const patchSubRule = (id: string, patch: Partial<FirstDepositSubRule>) => {
+  const patch = (
+    categoryId: string,
+    next: Parameters<typeof patchCategorySubRule>[2]
+  ) => {
     onChange((current) => ({
       ...current,
-      subRules: current.subRules.map((row) =>
-        row.id === id ? { ...row, ...patch } : row
-      ),
+      subRules: patchCategorySubRule(current.subRules, categoryId, next),
     }))
   }
 
@@ -63,63 +68,63 @@ export function FirstDepositFields({
           ),
         }))
       }
-      extraHeaders={[
-        <span key="turnover" className="inline-flex h-8 items-center">
-          Turnover
-        </span>,
-        <span key="balance" className="inline-flex h-8 items-center">
-          Balance
-        </span>,
-      ]}
-      rowEntityInvalid={(categoryId) => {
-        const subRule = subRuleFor(categoryId)
-        return Boolean(subRule && invalid.subRules?.[subRule.id]?.brands)
-      }}
-      footerError={invalid.categories ?? null}
-      renderExtra={(category, checked) => {
-        const subRule = subRuleFor(category.id)
-        if (!checked || !subRule) {
-          return (
-            <>
-              <RuleTableCell />
-              <RuleTableCell />
-            </>
-          )
-        }
-        const rowErrors = invalid.subRules?.[subRule.id] ?? {}
-
+      renderSubRows={(category) => {
+        const subRule = value.subRules.find(
+          (row) => row.categoryId === category.id
+        )
+        const errors = subRule ? invalid.subRules[subRule.id] : undefined
         return (
           <>
-            <FilterCell
-              id={`first-turnover-${subRule.id}`}
-              enabled={subRule.turnoverEnabled}
+            <FilterRow
+              switchId={`first-turnover-switch-${category.id}`}
+              labelKey="firstDeposit.turnoverFrom"
+              ariaKey="firstDeposit.turnoverFilter"
+              enabled={subRule?.turnoverEnabled ?? false}
               onEnabled={(turnoverEnabled) =>
-                patchSubRule(subRule.id, { turnoverEnabled })
+                patch(category.id, { turnoverEnabled })
               }
-              amount={subRule.turnoverMin}
-              onAmount={(turnoverMin) =>
-                patchSubRule(subRule.id, { turnoverMin })
-              }
-              invalid={Boolean(rowErrors.turnover)}
-              ariaLabel="Turnover filter"
-              period={subRule.turnoverPeriod}
-              onPeriod={(turnoverPeriod) =>
-                patchSubRule(subRule.id, { turnoverPeriod })
-              }
-            />
-            <FilterCell
-              id={`first-balance-${subRule.id}`}
-              enabled={subRule.balanceEnabled}
+            >
+              {subRule?.turnoverEnabled ? (
+                <div className="flex min-w-0 items-start gap-2">
+                  <div className="min-w-0 flex-1">
+                    <AmountField
+                      id={`first-turnover-${category.id}`}
+                      value={subRule.turnoverMin}
+                      onChange={(turnoverMin) =>
+                        patch(category.id, { turnoverMin })
+                      }
+                      invalid={Boolean(errors?.turnover)}
+                      errorSlot
+                    />
+                  </div>
+                  <TurnoverPeriod
+                    value={subRule.turnoverPeriod}
+                    onChange={(turnoverPeriod) =>
+                      patch(category.id, { turnoverPeriod })
+                    }
+                  />
+                </div>
+              ) : null}
+            </FilterRow>
+            <FilterRow
+              switchId={`first-balance-switch-${category.id}`}
+              labelKey="firstDeposit.balanceFrom"
+              ariaKey="firstDeposit.balanceFilter"
+              enabled={subRule?.balanceEnabled ?? false}
               onEnabled={(balanceEnabled) =>
-                patchSubRule(subRule.id, { balanceEnabled })
+                patch(category.id, { balanceEnabled })
               }
-              amount={subRule.balanceMin}
-              onAmount={(balanceMin) =>
-                patchSubRule(subRule.id, { balanceMin })
-              }
-              invalid={Boolean(rowErrors.balance)}
-              ariaLabel="Balance filter"
-            />
+            >
+              {subRule?.balanceEnabled ? (
+                <AmountField
+                  id={`first-balance-${category.id}`}
+                  value={subRule.balanceMin}
+                  onChange={(balanceMin) => patch(category.id, { balanceMin })}
+                  invalid={Boolean(errors?.balance)}
+                  errorSlot
+                />
+              ) : null}
+            </FilterRow>
           </>
         )
       }}
@@ -127,101 +132,77 @@ export function FirstDepositFields({
   )
 }
 
-function FilterCell({
-  id,
+function FilterRow({
+  switchId,
+  labelKey,
+  ariaKey,
   enabled,
   onEnabled,
-  amount,
-  onAmount,
-  invalid,
-  ariaLabel,
-  period,
-  onPeriod,
+  children,
 }: {
-  id: string
+  switchId: string
+  labelKey: MessageKey
+  ariaKey: MessageKey
   enabled: boolean
   onEnabled: (enabled: boolean) => void
-  amount: string
-  onAmount: (amount: string) => void
-  invalid: boolean
-  ariaLabel: string
-  period?: Period
-  onPeriod?: (period: Period) => void
+  children?: ReactNode
 }) {
+  const { t } = useTranslation()
+
   return (
-    <RuleTableCell className="min-w-[10rem] align-top">
-      <div className="flex flex-col gap-2">
-        <Switch
-          size="sm"
-          className="mt-1.5"
-          checked={enabled}
-          onCheckedChange={(checked) => onEnabled(checked === true)}
-          aria-label={ariaLabel}
-        />
-        {enabled ? (
-          <>
-            <AmountField
-              id={id}
-              value={amount}
-              onChange={onAmount}
-              invalid={invalid}
-              errorSlot
-            />
-            {onPeriod && period ? (
-              <Field>
-                <FieldLabel className="sr-only">Turnover period</FieldLabel>
-                <Select
-                  value={period}
-                  onValueChange={(next) => onPeriod(next as Period)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="day">Day</SelectItem>
-                    <SelectItem value="week">Week</SelectItem>
-                    <SelectItem value="month">Month</SelectItem>
-                    <SelectItem value="year">Year</SelectItem>
-                  </SelectContent>
-                </Select>
-              </Field>
-            ) : null}
-          </>
-        ) : null}
-      </div>
-    </RuleTableCell>
+    <FormRow
+      label={
+        <>
+          <Switch
+            id={switchId}
+            size="sm"
+            checked={enabled}
+            onCheckedChange={(checked) => onEnabled(checked === true)}
+            aria-label={t(ariaKey)}
+          />
+          <label htmlFor={switchId} className="min-w-0 cursor-pointer">
+            <OverflowText text={t(labelKey)} />
+          </label>
+        </>
+      }
+    >
+      {children}
+    </FormRow>
   )
 }
 
-function syncSubRules(
-  prev: FirstDepositSubRule[],
-  selectedBrandIds: string[],
-  retainCategoryId?: string | null
-): FirstDepositSubRule[] {
-  const selected = new Set(selectedBrandIds)
-  const byCategory = new Map(prev.map((row) => [row.categoryId, row]))
-  const next: FirstDepositSubRule[] = []
+function TurnoverPeriod({
+  value,
+  onChange,
+}: {
+  value: Period
+  onChange: (period: Period) => void
+}) {
+  const { t } = useTranslation()
 
-  for (const category of CATEGORIES) {
-    const brandIds = category.brands
-      .map((brand) => brand.id)
-      .filter((id) => selected.has(id))
-    if (brandIds.length === 0) {
-      if (retainCategoryId === category.id) {
-        const existing = byCategory.get(category.id)
-        if (existing) {
-          next.push({ ...existing, brandIds: [] })
-        }
-      }
-      continue
-    }
-    const existing = byCategory.get(category.id)
-    if (existing) {
-      next.push({ ...existing, brandIds })
-    } else {
-      next.push({ ...subRuleForCategory(category.id), brandIds })
-    }
-  }
-
-  return next
+  return (
+    <Field className="w-24 shrink-0">
+      <FieldLabel className="sr-only">{t("firstDeposit.period")}</FieldLabel>
+      <Select
+        value={value}
+        onValueChange={(next) => {
+          const period = PERIODS.find(([item]) => item === next)
+          if (period) {
+            onChange(period[0])
+          }
+        }}
+      >
+        <SelectTrigger className="w-full">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {PERIODS.map(([item, key]) => (
+            <SelectItem key={item} value={item}>
+              {t(key)}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </Field>
+  )
 }

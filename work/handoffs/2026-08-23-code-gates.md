@@ -3,9 +3,12 @@ type: Note
 title: Handoff — Code gates
 description: Machine gates replacing code review, where the code rules now live, and the state of the tree.
 tags: [c2b, prototype, gates, lint, tests]
+status: deprecated
 ---
 
 # Handoff — Code gates
+
+Deprecated. Open items moved to [2026-10-31-whole-flow-build.md](./2026-10-31-whole-flow-build.md). Do not execute.
 
 The human does not read code. The gates below are what stands in for his review, so a red check is a stop, not a suggestion.
 

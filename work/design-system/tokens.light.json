@@ -1,5 +1,12 @@
 {
   "color": {
+    "citron": {
+      "500": {
+        "$type": "color",
+        "$value": "oklch(0.866 0.1872 108.408)",
+        "$description": "Light brand yellow, #DFDB00. Dark keeps the landing citron."
+      }
+    },
     "surface": {
       "background": {
         "$type": "color",
@@ -111,6 +118,65 @@
         "$type": "color",
         "$value": "{color.citron.500}",
         "$description": "Focus ring. Use instead of border.default when the edge must show keyboard focus."
+      }
+    },
+    "activity": {
+      "night": {
+        "$type": "color",
+        "$value": "oklch(0.450 0.150 277)",
+        "$description": "Night pill icon and label on light. Pair with activity.night-bg. Indigo — not citron."
+      },
+      "night-bg": {
+        "$type": "color",
+        "$value": "oklch(0.945 0.022 277)",
+        "$description": "Soft night pill fill on light. Text on this fill meets AA. Not a page surface."
+      },
+      "morning": {
+        "$type": "color",
+        "$value": "oklch(0.460 0.090 72)",
+        "$description": "Morning pill icon and label on light. Pair with activity.morning-bg. Amber, hue kept off citron."
+      },
+      "morning-bg": {
+        "$type": "color",
+        "$value": "oklch(0.945 0.040 72)",
+        "$description": "Soft morning pill fill on light. Text on this fill meets AA. Not a page surface."
+      },
+      "day": {
+        "$type": "color",
+        "$value": "oklch(0.450 0.085 230)",
+        "$description": "Day pill icon and label on light. Pair with activity.day-bg. Sky blue — yellow collides with the citron accent."
+      },
+      "day-bg": {
+        "$type": "color",
+        "$value": "oklch(0.945 0.030 230)",
+        "$description": "Soft day pill fill on light. Text on this fill meets AA. Not a page surface."
+      },
+      "evening": {
+        "$type": "color",
+        "$value": "oklch(0.470 0.125 35)",
+        "$description": "Evening pill icon and label on light. Pair with activity.evening-bg. Coral."
+      },
+      "evening-bg": {
+        "$type": "color",
+        "$value": "oklch(0.940 0.025 35)",
+        "$description": "Soft evening pill fill on light. Text on this fill meets AA. Not a page surface."
+      }
+    },
+    "table": {
+      "header": {
+        "$type": "color",
+        "$value": "oklch(0 0 0 / 0.05)",
+        "$description": "Translucent header veil, slightly darker than the light page. Use with backdrop-blur. Not a text colour."
+      },
+      "row-hover": {
+        "$type": "color",
+        "$value": "oklch(0 0 0 / 0.06)",
+        "$description": "Translucent row hover, a step stronger than table.header. Not a text colour."
+      },
+      "row-glow": {
+        "$type": "color",
+        "$value": "oklch(0.866 0.1872 108.408 / 0.45)",
+        "$description": "Soft glow on the trailing edge of a hovered row. Colour is the light citron (color.citron.500); alpha is stored here because DTCG has no alpha-on-reference."
       }
     }
   }

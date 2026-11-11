@@ -1,12 +1,12 @@
 # AGENTS — prototype
 
-How code is written in this folder and how a change is proven. What the product does is a separate document, `target-flow.md`, kept with the project notes outside this folder; it is the canon for behaviour and this file never restates it.
+How code is written in this folder and how a change is proven. What the product does is the behaviour canon, now two documents, `target-flow.md` and `whole-flow.md`, both kept with the project notes outside this folder; this file never restates them.
 
 The code here is written by AI agents and reviewed by a designer who does not read code. Every claim about a change therefore has to be either machine-checked or readable as plain English. That single constraint shapes everything below.
 
 ## Gates
 
-`npm run verify` runs typecheck, tests, lint, the test-presence check and the skin check, stopping at the first failure. It is the only definition of done in this folder.
+`npm run verify` runs typecheck, tests, lint, the test-presence check, the skin check and the text check, stopping at the first failure. It is the only definition of done in this folder.
 
 Exception: if the human invoked `/quick-fix` this turn, do not run `verify` or `fix`. Done is values written into existing slots, or a stop message if no slot exists.
 
@@ -20,12 +20,15 @@ Never make a check pass by silencing it. `eslint-disable`, `@ts-ignore`, `it.ski
 
 | Folder | Holds | Rule |
 | --- | --- | --- |
-| `src/lib` | Pure functions — validation, selection, formatting, summary rows | No React. Every file has a sibling `*.test.ts`. Both enforced by `verify` |
+| `src/lib` | Pure functions — validation, selection, formatting | No React. Every file has a sibling `*.test.ts`. Both enforced by `verify` |
 | `src/hooks` | React state glue | — |
 | `src/components` | Rendering and user intent | Logic expressible without React belongs in `src/lib` |
 | `src/components/ui` | shadcn, as generated | Do not edit. Restyle through CSS variables |
 | `src/data` | Category and brand catalog | Data, no logic |
+| `src/i18n` | i18next setup and the `en` / `ru` dictionaries | Every interface text is a key here; `check:i18n` fails on text written in code. English is the spec's copy. Keys name the place on screen, not the phrase |
 | `src/styles` | Brand values | `brand.generated.css` is written by a generator outside this folder — never hand-edit it |
+
+Adding a shadcn component: the CLI currently writes `import { cn } from "cn"` and adds the `cn` npm package. Keep the generated file, change that one import to `@/lib/utils`, restore `package.json` and `package-lock.json`, and delete `node_modules/cn`. That line is the only allowed edit inside `src/components/ui`. If `add` wants to overwrite an existing ui file (it does for `dialog` → `button.tsx`, whose local `link` variant is intentional), take the new file's text from `npx shadcn@latest add <name> --dry-run --view src/components/ui/<name>.tsx` instead and leave the existing file alone. Either way, a new dependency or a `package.json` change is a stop.
 
 Components report what the user did; the owner decides what it means. The picker emits a `SelectionIntent`, the card applies it through a functional state update. Do not reintroduce a mirror of the selection — a ref, or an effect copying props into state — to make a batched change work. The intent shape exists to remove exactly that.
 
@@ -60,6 +63,6 @@ Deviations is the only one the human cannot get anywhere else. The other two are
 - Do not add a dependency unasked. No form library in particular: the hand-written predicates in `src/lib/rules.ts` are the readable part of this deliverable.
 - Do not create `tailwind.config.js`. This is Tailwind v4 — the theme is `@theme inline` in `src/index.css`.
 - Do not collapse the four rule cards in `NotificationsPage` into a config array. They are near-identical on purpose until a fifth rule exists.
-- Do not rewrite the caret handling in `AmountField` or the canvas measurement in `FitEntityNames`. Both look wrong and are not: one holds the cursor in place while the value is sanitised, the other implements "as many names as fit one line, then +N".
+- Do not rewrite the caret handling in `AmountField`. It looks wrong and is not: it holds the cursor in place while the value is sanitised.
 - Do not import from outside this folder. The prototype is published on its own.
 - Do not commit or push. Ask.
