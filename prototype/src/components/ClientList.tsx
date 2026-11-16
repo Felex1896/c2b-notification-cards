@@ -1,4 +1,3 @@
-import { Search } from "lucide-react"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -7,11 +6,6 @@ import { PageTabs } from "@/components/PageTabs"
 import { UploadDialog } from "@/components/UploadDialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 import { useCssHeight } from "@/hooks/use-css-height"
 import { usePrototype } from "@/hooks/use-prototype"
 import { clientListView, sampleRows, type Upload } from "@/lib/client-list"
@@ -33,42 +27,21 @@ export function ClientList({ upload }: { upload: Upload }) {
         ref={bandRef}
         className="sticky top-(--chrome-height) z-40 bg-background py-3"
       >
-        <div className="mx-auto flex w-full max-w-[1600px] items-center gap-3 px-4">
+        <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-3 px-4 md:flex-row md:items-center">
           <PageTabs />
-          <div className="ml-auto flex items-center gap-3">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  aria-label={t("clients.search")}
-                  className="lg:hidden"
-                >
-                  <Search />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent align="end" className="w-64 p-2">
-                <Input
-                  type="search"
-                  aria-label={t("clients.search")}
-                  placeholder={t("clients.search")}
-                  value={list.search}
-                  onChange={(event) => setSearch(event.target.value)}
-                />
-              </PopoverContent>
-            </Popover>
+          <div className="flex w-full min-w-0 flex-col gap-3 md:ml-auto md:w-auto md:flex-row md:items-center">
             <Input
               type="search"
               aria-label={t("clients.search")}
               placeholder={t("clients.search")}
               value={list.search}
               onChange={(event) => setSearch(event.target.value)}
-              className="hidden w-56 lg:block"
+              className="w-full min-w-0 md:w-56"
             />
             <Button
               type="button"
               variant="outline"
+              className="w-full md:w-auto"
               onClick={() => setReplacing(true)}
             >
               {t("clients.upload")}
@@ -77,7 +50,7 @@ export function ClientList({ upload }: { upload: Upload }) {
         </div>
       </div>
 
-      <div className="mx-auto flex w-full max-w-[1600px] min-w-0 flex-col gap-4 px-4 pb-10">
+      <div className="mx-auto flex w-full max-w-[1600px] min-w-0 flex-col gap-4 px-4 pb-[calc(2.5rem+var(--toolbar-height))]">
         {syncing && (
           <div
             role="status"

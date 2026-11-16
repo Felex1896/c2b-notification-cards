@@ -25,7 +25,8 @@ import { NotInPrototype } from "@/components/NotInPrototype"
 import { Button } from "@/components/ui/button"
 import { useTheme } from "@/components/theme-provider"
 import { useLanguage } from "@/hooks/use-language"
-import { isLanguage, LANGUAGES } from "@/lib/language"
+import { LANGUAGES } from "@/lib/language"
+import { cn } from "@/lib/utils"
 
 const THEMES = ["light", "dark", "system"] as const
 
@@ -39,7 +40,17 @@ function ThemeIcon({ theme }: { theme: ThemeChoice }) {
   return theme === "dark" ? <Moon /> : <Sun />
 }
 
-export function AccountMenu() {
+export function AccountMenu({
+  className,
+  showPlan = false,
+  menuSide = "bottom",
+  variant = "outline",
+}: {
+  className?: string
+  showPlan?: boolean
+  menuSide?: "top" | "bottom"
+  variant?: "outline" | "ghost"
+}) {
   const { t } = useTranslation()
   const { theme, setTheme } = useTheme()
   const { language, setLanguage } = useLanguage()
@@ -49,19 +60,29 @@ export function AccountMenu() {
       <DropdownMenu.Trigger asChild>
         <Button
           type="button"
-          variant="outline"
+          variant={variant}
           size="icon"
           aria-label={t("header.account")}
-          className="lg:!h-(--control-height) lg:!w-auto lg:!px-4"
+          className={cn(
+            showPlan
+              ? "!h-(--control-height) !w-auto max-w-full min-w-0 gap-2 !px-3"
+              : "gap-2 md:!h-(--control-height) md:!w-auto md:!px-4",
+            className
+          )}
         >
-          <CircleUserRound />
-          <span className="hidden items-center gap-1 lg:flex">
-            <Zap className="size-3.5 fill-current" />
+          <CircleUserRound className="shrink-0" />
+          <span
+            className={cn(
+              "inline-flex shrink-0 items-center gap-0.5 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground",
+              showPlan ? "" : "max-md:hidden"
+            )}
+          >
+            <Zap className="size-3 shrink-0 fill-current" />
             {t("header.plan")}
           </span>
         </Button>
       </DropdownMenu.Trigger>
-      <HeaderMenuContent>
+      <HeaderMenuContent side={menuSide}>
         <NotInPrototype>
           <HeaderMenuItem>
             <User />
@@ -115,7 +136,7 @@ export function AccountMenu() {
             <DropdownMenu.RadioGroup
               value={language}
               onValueChange={(next) => {
-                if (isLanguage(next)) {
+                if (next === "en" || next === "ru") {
                   setLanguage(next)
                 }
               }}

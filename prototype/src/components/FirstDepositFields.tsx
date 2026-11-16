@@ -58,6 +58,7 @@ export function FirstDepositFields({
   return (
     <CategoryBrandPicker
       selectedBrandIds={selectedBrandIds(value)}
+      selectsInvalid={invalid.selection !== undefined}
       onSelect={(intent) =>
         onChange((current) => ({
           ...current,

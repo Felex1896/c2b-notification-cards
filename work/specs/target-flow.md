@@ -30,23 +30,27 @@ One C2B path: explain roles → CSV → client table (usable while syncing) → 
 
 ### Card (collapsed)
 
-- Vertical card, top to bottom: icon tile and title on one line; meaning under them; chat pickers **Slack**, **Telegram**, **Email** (this order); bottom line — **Set up** / **Edit** (outline button) on the left, label **Send notifications** and the toggle on the right.
+- Vertical card, top to bottom: icon tile and title on one line; meaning under them; chat pickers **Slack**, **Telegram**, **Email** (this order); then the bottom row.
+- Saved rule not complete: **Set up** is a full-width outline button. No caption and no toggle.
+- Saved rule complete: **Edit** on the left, a caption and the toggle on the right. The caption matches the button (14px, medium, not caps) and always reads `Notifications`. Icon, title and meaning sit 16px apart; the button row sits 16px under the meaning.
 - **Set up** until the applied rule is complete; **Edit** once it is. No summary of applied values on the card. No pencil, no chevron.
 - Only **Set up** / **Edit** opens the rule modal. The rest of the card is not a click target.
 - Chat pickers act immediately, no Apply. Picker: a dropdown like the brand switcher — connected items with a check on the chosen one, then a full-width button **Connect Slack** (Telegram, Email) that opens the channels dialog on that tab. Nothing connected → `Nothing connected` and the button. Placeholder **Select**; X on a chosen chat clears it. One chat per messenger per card.
 - An item connected from a card's picker is chosen on that card. Other cards do not change.
 - Any chosen chat → the rule sends to the card's chats only.
-- Toggle is mute/unmute only and takes effect immediately. Hit target is the switch only.
-- Toggle is available only when the rule is complete **and** the card has at least one chat. Otherwise disabled with a hover tooltip: incomplete → `Set up the rule first`; complete, no chat → `Choose where to send`. Incomplete wins.
-- Sending never turns on by itself. Setting up and turning on are two actions: Apply never changes the toggle to on. When a card stops being sendable (Apply left it incomplete, or its last chat was cleared or disconnected) the toggle goes off and disabled; becoming sendable again leaves it off.
-- Sending off: the icon tile and the toggle dim; title, meaning and button do not. No `Muted ·` prefix.
+- The toggle is on the card only while the saved rule is complete. It is mute/unmute only and takes effect immediately. Hit target is the switch only.
+- While the rule is complete and the card has no chat, the toggle is disabled with a hover tooltip: `Choose where to send`.
+- Sending never turns on by itself. Setting up and turning on are two actions: Apply never changes the toggle to on. Apply cannot save an incomplete rule, so it cannot take the toggle away. When the last chat is cleared or disconnected the toggle goes off and disabled; becoming sendable again leaves it off.
+- Sending off: the icon tile dims; title, meaning, button and caption do not. The toggle stays full and its thumb is white. A disabled toggle stays faded. No `Muted ·` prefix.
 
 ### Rule modal
 
-- Opened from **Set up** / **Edit**. Header: the card's icon, title and meaning plus a close **X**. Body: the rule form. Footer: **Apply** / **Close**. **X**, **Close**, **Esc** discard; **Apply** commits. A click on the dimmed page does nothing. Motion and layout: [rule-modal.md](./rule-modal.md).
+- Opened from **Set up** / **Edit**. Header: the card's icon, title and meaning plus a close **X**. Body: the rule form. Footer: **Apply** / **Close**. A click on the dimmed page does nothing. Motion and layout: [rule-modal.md](./rule-modal.md).
 - Chats are not in the modal.
-- **Apply is never blocked.** It commits what is there and closes. An incomplete rule stays **Set up** with the toggle disabled.
-- Reopening an incomplete rule marks each empty required field: red outline and **Required field** under it. A first open shows no errors. There is no group error (no message under a block for “nothing selected”).
+- **Apply** commits and closes only when the draft is complete. Otherwise the modal stays open, errors show, and the view scrolls to the topmost marked control. Nothing is saved. **X**, **Close** and **Esc** still discard.
+- A first open shows no errors. Errors come from **Apply**, not from opening.
+- An empty required amount: red outline and **Required field** under it.
+- No entity selected, on withdrawal, deposit and first deposit: every entity dropdown is red, with no message under it. Left of **Apply** / **Close**: `Select at least 1 entity`. Any selected entity clears that message and restores every dropdown. Amount errors stay until those amounts are valid. Balance has no entity dropdowns and no footer message.
 - One rule modal at a time. Edit while sending is off is allowed; Apply writes fields, the toggle does not move.
 
 ### Form layout
@@ -113,9 +117,9 @@ One C2B path: explain roles → CSV → client table (usable while syncing) → 
 
 ## Notifications (screens)
 
-**A List** — page header with **Channels** on the right; four cards in the grid. Each card: icon + title, meaning, Slack / Telegram / Email pickers (live), **Set up** / **Edit**, **Send notifications** + toggle (live). Incomplete: **Set up**, toggle disabled, tooltip. No chat: toggle disabled, tooltip. Off: icon and toggle dimmed.
+**A List** — page header with **Channels** on the right; four cards in the grid. Each card: icon + title, meaning, Slack / Telegram / Email pickers (live), then the bottom row. Incomplete: full-width **Set up**, no caption, no toggle. Complete: **Edit**, `Notifications`, toggle. No chat: toggle disabled, tooltip. Off: icon dimmed, toggle thumb white.
 
-**B Edit** — modal from **Set up** / **Edit**. Header: icon, title, meaning, **X**. Body: the rule form (layout above). Footer: **Apply** / **Close**. Closes via **X**, **Close**, **Esc** (discard) or **Apply** (commit, always).
+**B Edit** — modal from **Set up** / **Edit**. Header: icon, title, meaning, **X**. Body: the rule form (layout above). Footer: **Apply** / **Close**, and `Select at least 1 entity` on the left when that error is showing. Closes via **X**, **Close**, **Esc** (discard). **Apply** commits and closes only when the draft is complete; otherwise it stays open, shows errors and scrolls to the topmost.
 
 - (1) **Increase by** | amount, **Decrease by** | amount.
 - (2) Block 1 **Min withdrawal amount \***; block 2 **Entities** with category rows and **Own min amount** toggles.
@@ -134,7 +138,7 @@ No file yet: the Notifications tab is not shown. It appears with the file.
 
 Happy: Set up → fill → Apply → modal closes, card shows **Edit**, toggle available but off → pick a chat on the card → turn the toggle on → event for 1003 → that card's chats.
 
-Incomplete: Apply with nothing selected or an empty required field → modal closes, card stays **Set up**, toggle disabled with `Set up the rule first`. Reopen → empty required fields are marked.
+Incomplete: Apply with nothing selected or an empty required field → modal stays open, scroll to the topmost error, nothing saved. Card stays full-width **Set up**, no toggle. Close discards the draft.
 
 No chat: complete rule, no chat on the card → toggle disabled with `Choose where to send`.
 
@@ -155,5 +159,5 @@ Not in this slice: Send test, discard confirm on Cancel, several cards of the sa
 ## Acceptance (for drawing, not code)
 
 - The four rules cannot be misread as the opposite money direction.
-- Incomplete setup is visible, not silent: an incomplete rule shows **Set up** and a disabled toggle with a reason; reopening it marks the empty required fields; a card without a chat cannot be turned on.
+- Incomplete setup is visible, not silent: an incomplete rule shows full-width **Set up** and no toggle. Apply does not close or save while a required value is missing; it marks the gaps and scrolls to the topmost. No entity selected marks every entity dropdown and shows `Select at least 1 entity` beside the buttons, with no message under the dropdowns. A card without a chat cannot be turned on.
 - Setting up a rule never turns it on.

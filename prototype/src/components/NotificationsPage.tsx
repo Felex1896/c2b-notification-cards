@@ -51,6 +51,17 @@ export function NotificationsPage() {
   const deposit = card("deposit")
   const firstDeposit = card("firstDeposit")
 
+  const balanceInvalid = balance.showErrors ? balanceErrors(balance.draft) : {}
+  const withdrawalInvalid = withdrawal.showErrors
+    ? entityErrors(withdrawal.draft)
+    : NO_ENTITY_ERRORS
+  const depositInvalid = deposit.showErrors
+    ? entityErrors(deposit.draft)
+    : NO_ENTITY_ERRORS
+  const firstDepositInvalid = firstDeposit.showErrors
+    ? firstDepositErrors(firstDeposit.draft)
+    : NO_FIRST_ERRORS
+
   const openChannels = (tab: ConnectionKind, target: CardKey | null) =>
     setChannelsDialog({ tab, card: target })
 
@@ -90,12 +101,12 @@ export function NotificationsPage() {
         ref={bandRef}
         className="sticky top-(--chrome-height) z-40 bg-background py-3"
       >
-        <div className="mx-auto flex w-full max-w-[1600px] items-center gap-3 px-4">
+        <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-3 px-4 md:flex-row md:items-center">
           <PageTabs />
           <Button
             type="button"
             variant="outline"
-            className="ml-auto"
+            className="w-full md:ml-auto md:w-auto"
             onClick={() => openChannels("slack", null)}
           >
             {t("notifications.channels")}
@@ -104,7 +115,7 @@ export function NotificationsPage() {
       </header>
 
       {/* 360px cards, 8px gap, 16px page padding: 2 from 760px, 4 from 1496px. */}
-      <div className="mx-auto w-full max-w-[1600px] px-4 pb-10">
+      <div className="mx-auto w-full max-w-[1600px] px-4 pb-[calc(2.5rem+var(--toolbar-height))]">
         <div
           ref={gridRef}
           className="grid auto-rows-fr grid-cols-1 gap-2 min-[760px]:grid-cols-[repeat(2,minmax(360px,1fr))] min-[1496px]:grid-cols-[repeat(4,minmax(360px,1fr))]"
@@ -119,7 +130,7 @@ export function NotificationsPage() {
             <BalanceFields
               value={balance.draft}
               onChange={balance.setDraft}
-              invalid={balance.showErrors ? balanceErrors(balance.draft) : {}}
+              invalid={balanceInvalid}
             />
           </RuleCard>
 
@@ -129,16 +140,17 @@ export function NotificationsPage() {
             meaning={t("rule.withdrawal.meaning")}
             card={withdrawal}
             onConnectChannel={(kind) => openChannels(kind, "withdrawal")}
+            applyError={
+              withdrawalInvalid.selection
+                ? t(withdrawalInvalid.selection)
+                : null
+            }
             pinned={
               <EntityMinAmount
                 idPrefix="withdrawal"
                 value={withdrawal.draft}
                 onChange={withdrawal.setDraft}
-                invalid={
-                  withdrawal.showErrors
-                    ? entityErrors(withdrawal.draft)
-                    : NO_ENTITY_ERRORS
-                }
+                invalid={withdrawalInvalid}
               />
             }
           >
@@ -146,11 +158,7 @@ export function NotificationsPage() {
               idPrefix="withdrawal"
               value={withdrawal.draft}
               onChange={withdrawal.setDraft}
-              invalid={
-                withdrawal.showErrors
-                  ? entityErrors(withdrawal.draft)
-                  : NO_ENTITY_ERRORS
-              }
+              invalid={withdrawalInvalid}
             />
           </RuleCard>
 
@@ -160,16 +168,15 @@ export function NotificationsPage() {
             meaning={t("rule.deposit.meaning")}
             card={deposit}
             onConnectChannel={(kind) => openChannels(kind, "deposit")}
+            applyError={
+              depositInvalid.selection ? t(depositInvalid.selection) : null
+            }
             pinned={
               <EntityMinAmount
                 idPrefix="deposit"
                 value={deposit.draft}
                 onChange={deposit.setDraft}
-                invalid={
-                  deposit.showErrors
-                    ? entityErrors(deposit.draft)
-                    : NO_ENTITY_ERRORS
-                }
+                invalid={depositInvalid}
               />
             }
           >
@@ -177,11 +184,7 @@ export function NotificationsPage() {
               idPrefix="deposit"
               value={deposit.draft}
               onChange={deposit.setDraft}
-              invalid={
-                deposit.showErrors
-                  ? entityErrors(deposit.draft)
-                  : NO_ENTITY_ERRORS
-              }
+              invalid={depositInvalid}
             />
           </RuleCard>
 
@@ -191,15 +194,16 @@ export function NotificationsPage() {
             meaning={t("rule.firstDeposit.meaning")}
             card={firstDeposit}
             onConnectChannel={(kind) => openChannels(kind, "firstDeposit")}
+            applyError={
+              firstDepositInvalid.selection
+                ? t(firstDepositInvalid.selection)
+                : null
+            }
           >
             <FirstDepositFields
               value={firstDeposit.draft}
               onChange={firstDeposit.setDraft}
-              invalid={
-                firstDeposit.showErrors
-                  ? firstDepositErrors(firstDeposit.draft)
-                  : NO_FIRST_ERRORS
-              }
+              invalid={firstDepositInvalid}
             />
           </RuleCard>
         </div>

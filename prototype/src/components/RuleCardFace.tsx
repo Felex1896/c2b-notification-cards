@@ -4,17 +4,12 @@ import { useEffect, useRef, type Ref } from "react"
 import { useTranslation } from "react-i18next"
 
 import { CardChannelPicker } from "@/components/CardChannelPicker"
-import { Overline } from "@/components/Overline"
 import { RuleHeader } from "@/components/RuleHeader"
 import { RULE_MOTION, ruleFrameClass } from "@/components/rule-motion"
+import { HoverTooltip } from "@/components/HoverTooltip"
 import { Button } from "@/components/ui/button"
 import { CardDescription, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 import { CHANNEL_ORDER, channelId, channelsWith } from "@/lib/channel-picker"
 import type { ConnectionKind } from "@/lib/connections"
 import type { RuleCardStatus } from "@/lib/rule-card"
@@ -71,12 +66,9 @@ export function RuleCardFace({
     const id = window.setTimeout(restore, 400)
     return () => window.clearTimeout(id)
   }, [expanded])
-  const muted = status.complete && !sending
   const landing = { layout: { ...frame, delay: fade.duration } }
   const controls = (
-    <span
-      className={cn("inline-flex", muted && status.sendable && "opacity-50")}
-    >
+    <span className="inline-flex">
       <Switch
         checked={sending}
         disabled={!status.sendable}
@@ -84,7 +76,7 @@ export function RuleCardFace({
         aria-label={
           status.sendable
             ? t(sending ? "rule.row.mute" : "rule.row.unmute")
-            : t("rule.row.offUntilSetUp")
+            : t("rule.row.chooseChat")
         }
       />
     </span>
@@ -94,7 +86,7 @@ export function RuleCardFace({
     <div
       data-rule-card=""
       className={cn(
-        "flex h-full min-w-[360px] flex-col overflow-visible",
+        "flex h-full min-w-0 flex-col overflow-visible min-[760px]:min-w-[360px]",
         ruleFrameClass()
       )}
     >
@@ -104,7 +96,7 @@ export function RuleCardFace({
         layoutDependency={expanded}
         transition={landing}
         data-rule-glow=""
-        data-sending={sending ? "on" : undefined}
+        data-sending={!expanded && sending ? "on" : undefined}
         style={{ borderRadius: "var(--table-header-radius)" }}
         onLayoutAnimationComplete={() => {
           const node = panelRef.current
@@ -127,7 +119,12 @@ export function RuleCardFace({
           }
         />
         <motion.div
-          className="mt-3 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3"
+          className={cn(
+            "mt-4",
+            status.complete
+              ? "grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4"
+              : "flex"
+          )}
           initial={false}
           animate={{ opacity: expanded ? 0 : 1 }}
           transition={
@@ -138,29 +135,27 @@ export function RuleCardFace({
             ref={buttonRef}
             type="button"
             variant="outline"
+            className={cn(!status.complete && "w-full")}
             onClick={onOpen}
           >
-            {t("rule.row.setUp")}
+            {t(status.complete ? "rule.row.edit" : "rule.row.setUp")}
           </Button>
-          <Overline className="line-clamp-2 text-right leading-tight">
-            {t("rule.row.sendNotifications")}
-          </Overline>
-          {status.sendable || status.blockedReason === null ? (
-            controls
-          ) : (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span className="inline-flex">{controls}</span>
-              </TooltipTrigger>
-              <TooltipContent>
-                {t(
-                  status.blockedReason === "chooseChat"
-                    ? "rule.row.chooseChat"
-                    : "rule.row.setUpFirst"
-                )}
-              </TooltipContent>
-            </Tooltip>
-          )}
+          {status.complete ? (
+            <>
+              <span className="text-right text-sm font-medium">
+                {t("rule.row.notifications")}
+              </span>
+              {status.sendable ? (
+                controls
+              ) : (
+                <HoverTooltip content={t("rule.row.chooseChat")}>
+                  <span className="inline-flex *:pointer-events-none">
+                    {controls}
+                  </span>
+                </HoverTooltip>
+              )}
+            </>
+          ) : null}
         </motion.div>
       </motion.div>
       <div className="flex flex-col gap-2 px-6 pt-6 pb-6">

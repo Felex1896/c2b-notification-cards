@@ -34,7 +34,7 @@ const emailToo: Channels = {
 }
 
 function filled(amount = "100") {
-  return setRuleCardDraft(openRuleCard(emptyRuleCard(kind), kind), { amount })
+  return setRuleCardDraft(openRuleCard(emptyRuleCard(kind)), { amount })
 }
 
 function sending() {
@@ -59,13 +59,13 @@ describe("a rule card", () => {
 
   it("opening a card that was never applied only expands it", () => {
     const card = emptyRuleCard(kind)
-    expect(openRuleCard(card, kind)).toEqual({ ...card, expanded: true })
-    expect(openRuleCard(card, kind).showErrors).toBe(false)
+    expect(openRuleCard(card)).toEqual({ ...card, expanded: true })
+    expect(openRuleCard(card).showErrors).toBe(false)
   })
 
   it("opening a card that is already open changes nothing", () => {
     const card = filled()
-    expect(openRuleCard(card, kind)).toBe(card)
+    expect(openRuleCard(card)).toBe(card)
   })
 
   it("a draft change can be an updater that sees the current draft", () => {
@@ -92,28 +92,21 @@ describe("a rule card", () => {
     expect(card.channels).toEqual(chat)
   })
 
-  it("Apply of an incomplete draft closes the card and leaves sending off", () => {
-    const card = applyRuleCard(
-      setRuleCardChannels(openRuleCard(emptyRuleCard(kind), kind), chat),
-      kind
-    )
-    expect(card.expanded).toBe(false)
-    expect(card.showErrors).toBe(false)
-    expect(card.applied).toEqual({ amount: "" })
+  it("Apply of an incomplete draft stays open, shows errors and stores nothing", () => {
+    const opened = setRuleCardChannels(openRuleCard(emptyRuleCard(kind)), chat)
+    const card = applyRuleCard(opened, kind)
+    expect(card.expanded).toBe(true)
+    expect(card.showErrors).toBe(true)
+    expect(card.applied).toBeNull()
+    expect(card.draft).toEqual({ amount: "" })
     expect(card.sending).toBe(false)
     expect(ruleCardStatus(card, kind).complete).toBe(false)
-  })
-
-  it("reopening an incomplete rule shows errors", () => {
-    const applied = applyRuleCard(openRuleCard(emptyRuleCard(kind), kind), kind)
-    const reopened = openRuleCard(applied, kind)
-    expect(reopened.expanded).toBe(true)
-    expect(reopened.showErrors).toBe(true)
+    expect(toggleRuleCardSending(card, kind, true)).toBe(card)
   })
 
   it("opening a complete rule shows no errors", () => {
     const applied = applyRuleCard(filled(), kind)
-    expect(openRuleCard(applied, kind).showErrors).toBe(false)
+    expect(openRuleCard(applied).showErrors).toBe(false)
   })
 
   it("a later Apply keeps sending on when the rule stays complete and a chat is chosen", () => {
@@ -134,28 +127,22 @@ describe("a rule card", () => {
     expect(again.sending).toBe(false)
   })
 
-  it("a later Apply turns sending off when the rule is no longer complete", () => {
+  it("Apply of a draft that is no longer complete stays open and keeps the saved rule", () => {
     const again = applyRuleCard(
-      setRuleCardDraft(sending(), { amount: "" }),
+      setRuleCardDraft(openRuleCard(sending()), { amount: "" }),
       kind
     )
-    expect(again.sending).toBe(false)
-    expect(again.expanded).toBe(false)
-    expect(again.applied).toEqual({ amount: "" })
+    expect(again.sending).toBe(true)
+    expect(again.expanded).toBe(true)
+    expect(again.showErrors).toBe(true)
+    expect(again.applied).toEqual({ amount: "100" })
+    expect(again.draft).toEqual({ amount: "" })
   })
 
   it("the sending toggle does nothing before the first Apply", () => {
     const card = setRuleCardChannels(emptyRuleCard(kind), chat)
+    expect(ruleCardStatus(card, kind).blockedReason).toBe("setUpFirst")
     expect(toggleRuleCardSending(card, kind, true)).toBe(card)
-  })
-
-  it("the sending toggle cannot turn on while the rule is incomplete", () => {
-    const applied = setRuleCardChannels(
-      applyRuleCard(openRuleCard(emptyRuleCard(kind), kind), kind),
-      chat
-    )
-    expect(ruleCardStatus(applied, kind).blockedReason).toBe("setUpFirst")
-    expect(toggleRuleCardSending(applied, kind, true)).toBe(applied)
   })
 
   it("the sending toggle cannot turn on while the card has no chat", () => {
@@ -168,9 +155,9 @@ describe("a rule card", () => {
     expect(toggleRuleCardSending(applied, kind, true)).toBe(applied)
   })
 
-  it("an incomplete rule with no chat says set up first", () => {
-    const applied = applyRuleCard(openRuleCard(emptyRuleCard(kind), kind), kind)
-    expect(ruleCardStatus(applied, kind)).toEqual({
+  it("a card with nothing saved says set up first", () => {
+    const card = applyRuleCard(openRuleCard(emptyRuleCard(kind)), kind)
+    expect(ruleCardStatus(card, kind)).toEqual({
       complete: false,
       sendable: false,
       blockedReason: "setUpFirst",
@@ -224,7 +211,7 @@ describe("a rule card", () => {
 
   it("Cancel restores the last applied values and closes the card", () => {
     const applied = applyRuleCard(filled("100"), kind)
-    const edited = setRuleCardDraft(openRuleCard(applied, kind), {
+    const edited = setRuleCardDraft(openRuleCard(applied), {
       amount: "999",
     })
     const cancelled = cancelRuleCard(edited, kind)
@@ -242,12 +229,9 @@ describe("a rule card", () => {
   })
 
   it("Cancel hides the errors", () => {
-    const reopened = openRuleCard(
-      applyRuleCard(openRuleCard(emptyRuleCard(kind), kind), kind),
-      kind
-    )
-    expect(reopened.showErrors).toBe(true)
-    expect(cancelRuleCard(reopened, kind).showErrors).toBe(false)
+    const revealed = applyRuleCard(openRuleCard(emptyRuleCard(kind)), kind)
+    expect(revealed.showErrors).toBe(true)
+    expect(cancelRuleCard(revealed, kind).showErrors).toBe(false)
   })
 
   it("Cancel keeps the card's chats", () => {
@@ -256,12 +240,9 @@ describe("a rule card", () => {
   })
 
   it("Apply hides the errors", () => {
-    const reopened = openRuleCard(
-      applyRuleCard(openRuleCard(emptyRuleCard(kind), kind), kind),
-      kind
-    )
+    const revealed = applyRuleCard(openRuleCard(emptyRuleCard(kind)), kind)
     const fixed = applyRuleCard(
-      setRuleCardDraft(reopened, { amount: "1" }),
+      setRuleCardDraft(revealed, { amount: "1" }),
       kind
     )
     expect(fixed.showErrors).toBe(false)

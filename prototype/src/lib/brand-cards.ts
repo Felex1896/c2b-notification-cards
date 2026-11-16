@@ -93,7 +93,7 @@ function runCardOp<T>(
 ): RuleCardState<T> {
   switch (op.kind) {
     case "open":
-      return openRuleCard(state, kind)
+      return openRuleCard(state)
     case "cancel":
       return cancelRuleCard(state, kind)
     case "apply":

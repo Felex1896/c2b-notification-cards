@@ -41,10 +41,10 @@ export function EntityMinAmount({
   const amountId = `${idPrefix}-amount`
 
   return (
-    <div className="grid w-full grid-cols-[160px_minmax(0,1fr)] items-start gap-x-3">
+    <div className="flex w-full min-w-0 flex-col gap-2 md:grid md:grid-cols-[minmax(0,160px)_minmax(0,1fr)] md:items-start md:gap-x-3">
       <label
         htmlFor={amountId}
-        className="flex h-(--control-height) min-w-0 items-center"
+        className="flex min-w-0 items-center md:h-(--control-height)"
       >
         <OverflowText text={t(MIN_AMOUNT_LABEL[idPrefix])} />
       </label>
@@ -68,6 +68,7 @@ export function EntityRuleFields({
   return (
     <CategoryBrandPicker
       selectedBrandIds={value.selectedBrandIds}
+      selectsInvalid={invalid.selection !== undefined}
       onSelect={(intent) =>
         onChange((current) => {
           const selectedBrandIds = applySelection(

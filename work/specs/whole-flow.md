@@ -23,11 +23,12 @@ Each brand walks this path on its own.
 ## Shell
 
 - Top bar, left to right: logo, **Citron AI**, product switch **C2B Analytics** (current) | **B2B Analytics**. Right: brand switcher, account menu.
-- Narrow window (below 1024 px): Citron AI and the product switch fold into an outline icon button (burger) left of the logo. The **Brand** caption hides; the switcher stays. The account control keeps only the profile icon — the plan label hides. Client search collapses to an outline magnifying-glass button that opens the field.
+- Narrow window (below 1024 px): Citron AI and the product switch leave the header. The brand switcher stays, capped at the same width as on desktop so a tablet does not stretch it. From 768 px, client search (same cap) and the page button sit on one row; the button does not stretch. Below that they stack and the search is full width.
+- Bottom bar, below 1024 px, centred, max width 28rem. Each option except Citron AI sits in its own container; the chosen one is the notification plate (transparent). Captions sit under the icons. Those icons are larger; Citron AI stays an inverse disc (foreground fill, background glyph), not citron. The C2B container, the gap and the B2B container together are the same width as the account container. The account opens a full-width sheet. Theme and Language in that sheet open a centred modal. Desktop keeps the header menu and its submenus.
 - **Clients** | **Notifications** | **Overview** appear only after that brand has a file. Until then the landing is the only page. With a file, the tabs share one row with the page's controls at the right end: client search and **Upload wallets**, or **Set up channels**. No notifications title. The table and the rule cards start under that row.
 - Not built: Citron AI, B2B Analytics, Overview, Profile, Log out, Manage brands and wallets. A click shows a tooltip “Not in this prototype” and does nothing else. The logo does nothing.
-- Brand switcher: brand avatar (initial), caption **Brand**, brand name. Fixed width; a longer name is cut with an ellipsis, the full name shows on hover. Opens a list, one row per brand: avatar, name, a check mark (not a checkbox) on the selected one. Always exactly one brand selected — a click moves the check; no `All brands`. Below the list: “Data is shown for the selected brand” and **Manage brands and wallets**.
-- Account menu: one control, profile icon plus plan label **Basic**. Menu in two groups: Profile, Theme, Language | Log out. Theme and Language rows show the current choice — the Theme icon is the current theme, its name sits on the right — and open a submenu: Light, Dark, System; English, Русский. System follows the device and changes with it. The menu stays open after a theme or language change.
+- Brand switcher: brand avatar (initial), brand name. No caption. Fixed width; a longer name is cut with an ellipsis, the full name shows on hover. Opens a list, one row per brand: avatar, name, a check mark (not a checkbox) on the selected one. Always exactly one brand selected — a click moves the check; no `All brands`. Below the list: “Data is shown for the selected brand” and **Manage brands and wallets**.
+- Account menu, desktop: one control, profile icon plus plan label **Basic**. Menu in two groups: Profile, Theme, Language | Log out. Theme and Language rows show the current choice — the Theme icon is the current theme, its name sits on the right — and open a submenu: Light, Dark, System; English, Русский. System follows the device and changes with it. The menu stays open after a theme or language change.
 - Two brands, both start empty. Names are placeholders: `Northbet`, `Lumen Casino`.
 - A brand owns its CSV, its clients, and its four rules with their chats. Switching brand switches all of them.
 - Channel **connections** are account-wide: connected once, available in every brand.
@@ -134,7 +135,7 @@ One dialog, **Notification channels**, with three tabs: Slack, Telegram, Email (
 
 ## Prototype toolbar
 
-Prototype chrome above the app header, not product.
+Prototype chrome above the app header, not product. Phone (below 768 px): a 40 px strip. **Prototype settings** is centred and muted, with a notch centred under it. Tap it, or drag it down, to open the options; drag it up or tap it again to close. Choosing any option closes the strip. Tablet and desktop keep the button row.
 
 - **Start over** — both brands empty, no connections, no rules.
 - **Clients loaded** — selected brand only: sample file A loaded, sync finished. Acts as a replace (search cleared, page 1, sort kept; rules and channels stay). Opens **Clients**.

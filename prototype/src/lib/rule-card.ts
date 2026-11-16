@@ -52,15 +52,11 @@ export function ruleCardStatus<T>(
   return { complete, sendable, blockedReason: null }
 }
 
-export function openRuleCard<T>(
-  state: RuleCardState<T>,
-  kind: RuleCardKind<T>
-): RuleCardState<T> {
+export function openRuleCard<T>(state: RuleCardState<T>): RuleCardState<T> {
   if (state.expanded) {
     return state
   }
-  const showErrors = state.applied !== null && !kind.isComplete(state.applied)
-  return { ...state, expanded: true, showErrors }
+  return { ...state, expanded: true, showErrors: false }
 }
 
 export function setRuleCardDraft<T>(
@@ -84,13 +80,19 @@ export function cancelRuleCard<T>(
   }
 }
 
-/** Always commits and closes. Sending stays off unless the card stays sendable. */
+/**
+ * Commits and closes only when the draft is complete.
+ * Otherwise stays as it is and reveals errors. Sending never turns on here.
+ */
 export function applyRuleCard<T>(
   state: RuleCardState<T>,
   kind: RuleCardKind<T>
 ): RuleCardState<T> {
   const next = kind.commit(state.draft)
-  const sendable = kind.isComplete(next) && hasAnyChat(state.channels)
+  if (!kind.isComplete(next)) {
+    return { ...state, showErrors: true }
+  }
+  const sendable = hasAnyChat(state.channels)
   return {
     expanded: false,
     sending: sendable && state.sending,

@@ -26,6 +26,8 @@ type RuleCardProps = {
   meaning: string
   card: RuleCardControls
   onConnectChannel: (kind: ConnectionKind) => void
+  /** Left of Apply / Close. Shown after a failed Apply when no entity is chosen. */
+  applyError?: string | null
   /** Rendered in the open header, above the scroll. */
   pinned?: ReactNode
   children: ReactNode
@@ -38,6 +40,7 @@ export function RuleCard({
   meaning,
   card,
   onConnectChannel,
+  applyError,
   pinned,
   children,
 }: RuleCardProps) {
@@ -73,6 +76,7 @@ export function RuleCard({
         sending={card.sending}
         onCancel={card.cancel}
         onApply={card.apply}
+        applyError={applyError}
         onReturnFocus={() => buttonRef.current?.focus()}
         pinned={pinned}
       >

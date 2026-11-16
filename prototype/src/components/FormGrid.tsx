@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 /** One group of controls. No stroke: the plate behind it is the separator. */
 export function FormPlate({ children }: { children: ReactNode }) {
   return (
-    <div className="rule-line grid grid-cols-[160px_minmax(0,1fr)] items-start gap-x-3 gap-y-2 border-b px-4 py-3">
+    <div className="rule-line flex w-full min-w-0 flex-col gap-3 border-b px-4 py-3 md:grid md:grid-cols-[minmax(0,160px)_minmax(0,1fr)] md:items-start md:gap-x-3 md:gap-y-2">
       {children}
     </div>
   )
@@ -27,7 +27,7 @@ export function FormStack({
   return (
     <div className="rule-card-layer flex max-h-full min-h-0 flex-col overflow-hidden rounded-table-header">
       {pinned ? <div className="shrink-0 [&>*]:pt-6">{pinned}</div> : null}
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <div data-form-scroll="" className="min-h-0 flex-1 overflow-y-auto">
         <div
           className={cn(
             "flex flex-col [&>*:last-child]:border-b-0",
@@ -42,9 +42,10 @@ export function FormStack({
 }
 
 /**
- * Two cells of the surrounding plate grid. A fragment, so every row —
- * including rows rendered by a child — shares that one pair of columns.
- * The label column is 160px on every card; text that does not fit truncates.
+ * Label and field. On a phone they stack, label then field.
+ * From tablet width the wrapper disappears (`contents`) and the two cells join the
+ * plate's grid: one 160px label column, shared by every row. Text that does
+ * not fit truncates.
  */
 export function FormRow({
   label,
@@ -54,11 +55,11 @@ export function FormRow({
   children?: ReactNode
 }) {
   return (
-    <>
-      <div className="flex h-(--control-height) w-[160px] min-w-0 items-center gap-2 self-start overflow-hidden text-sm">
+    <div className="flex min-w-0 flex-col gap-2 md:contents">
+      <div className="flex min-w-0 items-center gap-2 overflow-hidden text-sm md:h-(--control-height) md:self-start">
         {typeof label === "string" ? <OverflowText text={label} /> : label}
       </div>
-      <div className="min-w-0 self-start">{children}</div>
-    </>
+      <div className="min-w-0 md:self-start">{children}</div>
+    </div>
   )
 }

@@ -1,5 +1,6 @@
 import { AppHeader } from "@/components/AppHeader"
 import { ClientsPage } from "@/components/ClientsPage"
+import { MobileToolbar } from "@/components/MobileToolbar"
 import { NotificationsPage } from "@/components/NotificationsPage"
 import { PrototypeToolbar } from "@/components/PrototypeToolbar"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
@@ -35,6 +36,7 @@ export function AppShell() {
       <TabsContent value="notifications">
         <NotificationsPage />
       </TabsContent>
+      <MobileToolbar />
     </Tabs>
   )
 }

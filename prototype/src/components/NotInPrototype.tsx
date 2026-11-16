@@ -6,6 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useCoarsePointer } from "@/hooks/use-coarse-pointer"
 
 const HIDE_AFTER_MS = 1500
 
@@ -14,7 +15,9 @@ const HIDE_AFTER_MS = 1500
  * without `hoverLabel`, hover and focus do not. The click is default-prevented
  * so a menu item it wraps stays open and does not fire its select.
  * With `hoverLabel`, hover shows that label and a click switches the tooltip
- * to the notice. `data-notice` is set on the control while the notice is open.
+ * to the notice. A touch screen has no hover: the first tap shows that label,
+ * and the next tap shows the notice. `data-notice` is set on the control while
+ * the notice is open.
  */
 export function NotInPrototype({
   children,
@@ -24,6 +27,7 @@ export function NotInPrototype({
   hoverLabel?: string
 }) {
   const { t } = useTranslation()
+  const coarse = useCoarsePointer()
   const [notice, setNotice] = useState(false)
   const [hover, setHover] = useState(false)
 
@@ -48,6 +52,12 @@ export function NotInPrototype({
           }
           return
         }
+        if (coarse) {
+          if (!next) {
+            setHover(false)
+          }
+          return
+        }
         setHover(next)
       }}
     >
@@ -56,6 +66,11 @@ export function NotInPrototype({
         data-notice={notice ? "" : undefined}
         onClick={(event) => {
           event.preventDefault()
+          if (coarse && hoverLabel !== undefined && !hover) {
+            setHover(true)
+            return
+          }
+          setHover(false)
           setNotice(true)
         }}
       >

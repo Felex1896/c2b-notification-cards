@@ -3,9 +3,10 @@ import { numberLocale, type Language } from "@/lib/language"
 
 export const NONE = "__none__"
 export const REQUIRED = "errors.required"
+export const SELECT_ENTITY = "errors.selectEntity"
 
 /** Validation answers with a dictionary key; the screen picks the language. */
-export type RuleErrorKey = typeof REQUIRED
+export type RuleErrorKey = typeof REQUIRED | typeof SELECT_ENTITY
 
 export type Period = "day" | "week" | "month" | "year"
 export type TriState = "none" | "some" | "all"
@@ -233,6 +234,8 @@ export function isBalanceComplete(values: BalanceValues): boolean {
 export type EntityErrors = {
   amount?: RuleErrorKey
   categories: Record<string, RuleErrorKey>
+  /** Set when no entity is selected. Dropdowns go red; the message sits by the buttons. */
+  selection?: RuleErrorKey
 }
 
 export function categoryIdsForBrands(
@@ -267,6 +270,9 @@ export function entityErrors(values: EntityValues): EntityErrors {
     }
   }
   const errors: EntityErrors = { categories }
+  if (values.selectedBrandIds.length === 0) {
+    errors.selection = SELECT_ENTITY
+  }
   if (commonAmountNeeded(values) && !isPositiveAmount(values.amount)) {
     errors.amount = REQUIRED
   }
@@ -345,6 +351,8 @@ export type SubRuleErrors = {
 export type FirstDepositErrors = {
   /** Keyed by sub-rule id — rows and errors are never aligned by position. */
   subRules: Record<string, SubRuleErrors>
+  /** Set when no entity is selected. Dropdowns go red; the message sits by the buttons. */
+  selection?: RuleErrorKey
 }
 
 /**
@@ -371,11 +379,16 @@ export function subRuleErrors(value: FirstDepositSubRule): SubRuleErrors {
 export function firstDepositErrors(
   values: FirstDepositValues
 ): FirstDepositErrors {
+  const counted = countedSubRules(values)
   const subRules: Record<string, SubRuleErrors> = {}
-  for (const row of countedSubRules(values)) {
+  for (const row of counted) {
     subRules[row.id] = subRuleErrors(row)
   }
-  return { subRules }
+  const errors: FirstDepositErrors = { subRules }
+  if (counted.length === 0) {
+    errors.selection = SELECT_ENTITY
+  }
+  return errors
 }
 
 export function isFirstDepositComplete(values: FirstDepositValues): boolean {

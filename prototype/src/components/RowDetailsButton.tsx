@@ -15,7 +15,7 @@ export function RowDetailsButton() {
         variant="ghost"
         size="icon"
         aria-label={t("clients.row.details")}
-        className="bg-background/30 opacity-0 shadow-none backdrop-blur-md group-focus-within:opacity-100 group-hover:opacity-100 hover:bg-background/30 focus-visible:opacity-100 data-notice:opacity-100"
+        className="bg-background/30 opacity-0 shadow-none backdrop-blur-md group-focus-within:opacity-100 group-hover:opacity-100 hover:bg-background/30 focus-visible:opacity-100 data-notice:opacity-100 max-md:opacity-100"
       >
         <ArrowRight />
       </Button>

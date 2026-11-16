@@ -31,7 +31,11 @@ export function AmountField({
   const showErrorSlot = errorSlot ?? label != null
 
   return (
-    <Field data-invalid={invalid || undefined} className="min-w-0 gap-1.5">
+    <Field
+      data-invalid={invalid || undefined}
+      data-field-error={invalid ? "" : undefined}
+      className="min-w-0 gap-1.5"
+    >
       {label ? <FieldLabel htmlFor={id}>{label}</FieldLabel> : null}
       <div className="flex min-w-0">
         <span className={cn(amountPrefixClassName, disabled && "opacity-50")}>

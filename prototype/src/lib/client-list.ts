@@ -52,7 +52,8 @@ export const DEFAULT_LIST: ListState = {
 
 /**
  * Column order of the table, as in the live product.
- * Widths are layout (px), not tokens. A filler column after these takes the rest.
+ * Widths are the minimum of each column, in px, not tokens. The table
+ * stretches every column past that minimum when the pane is wider.
  */
 export const COLUMNS: { key: SortKey; labelKey: MessageKey; width: number }[] =
   [
@@ -77,7 +78,7 @@ export const COLUMNS: { key: SortKey; labelKey: MessageKey; width: number }[] =
 /** The arrow column pinned to the right edge of the visible table. */
 export const ACTIONS_COLUMN_WIDTH = 56
 
-/** Width of the fixed columns before the filler absorbs the rest. */
+/** Sum of the column minimums, including the arrow column. */
 export function tableMinWidth(): number {
   return (
     COLUMNS.reduce((sum, column) => sum + column.width, 0) +

@@ -11,8 +11,8 @@ import {
   balanceErrors,
   emptyChannels,
   entityErrors,
-  isEntityComplete,
   REQUIRED,
+  SELECT_ENTITY,
   type Channels,
 } from "@/lib/rules"
 
@@ -37,7 +37,7 @@ const slack: Channels = {
 }
 
 describe("card operations", () => {
-  it("Apply with no selected entity closes the modal and the rule stays incomplete", () => {
+  it("Apply with no selected entity stays open and asks for one, with no field message", () => {
     const opened = apply(emptyCards(), {
       type: "card",
       brand: "a",
@@ -52,49 +52,35 @@ describe("card operations", () => {
     })
     const card = applied.withdrawal
 
-    expect(card.expanded).toBe(false)
-    expect(card.showErrors).toBe(false)
+    expect(card.expanded).toBe(true)
+    expect(card.showErrors).toBe(true)
     expect(card.sending).toBe(false)
-    expect(card.applied?.selectedBrandIds).toEqual([])
-    expect(card.applied && isEntityComplete(card.applied)).toBe(false)
+    expect(card.applied).toBeNull()
+    expect(entityErrors(card.draft)).toEqual({
+      categories: {},
+      selection: SELECT_ENTITY,
+    })
     expect(opened.deposit).toBe(applied.deposit)
   })
 
-  it("reopening an incomplete withdrawal shows errors and highlights nothing", () => {
-    const applied = apply(emptyCards(), {
-      type: "card",
-      brand: "a",
-      card: "withdrawal",
-      op: { kind: "apply" },
-    })
-    const reopened = apply(applied, {
-      type: "card",
-      brand: "a",
-      card: "withdrawal",
-      op: { kind: "open" },
-    })
-
-    expect(reopened.withdrawal.expanded).toBe(true)
-    expect(reopened.withdrawal.showErrors).toBe(true)
-    expect(entityErrors(reopened.withdrawal.draft)).toEqual({ categories: {} })
-  })
-
-  it("reopening an applied balance with both amounts empty marks both required", () => {
-    const applied = apply(emptyCards(), {
-      type: "card",
-      brand: "a",
-      card: "balance",
-      op: { kind: "apply" },
-    })
-    const reopened = apply(applied, {
+  it("Apply with both balance amounts empty stays open and marks both required", () => {
+    const opened = apply(emptyCards(), {
       type: "card",
       brand: "a",
       card: "balance",
       op: { kind: "open" },
     })
-    const errors = balanceErrors(reopened.balance.draft)
+    const applied = apply(opened, {
+      type: "card",
+      brand: "a",
+      card: "balance",
+      op: { kind: "apply" },
+    })
+    const errors = balanceErrors(applied.balance.draft)
 
-    expect(reopened.balance.showErrors).toBe(true)
+    expect(applied.balance.expanded).toBe(true)
+    expect(applied.balance.showErrors).toBe(true)
+    expect(applied.balance.applied).toBeNull()
     expect(errors.increaseAmount).toBe(REQUIRED)
     expect(errors.decreaseAmount).toBe(REQUIRED)
   })

@@ -58,8 +58,8 @@
 }
 
 [data-skin="brand"] .channels-dialog {
-  height: 480px;
-  max-height: 480px;
+  height: min(480px, calc(100dvh - 2rem));
+  max-height: min(480px, calc(100dvh - 2rem));
   padding: 0 !important;
   gap: 20px;
 }
@@ -117,20 +117,20 @@
   border-radius: var(--radius);
 }
 
-/* Tabs: track 40, radius = button; pill 32, radius = button − 4. */
+/* Tabs: button radius, no inset between the tabs and the track. */
 [data-skin="brand"] [data-slot="tabs-list"] {
   height: 40px;
   gap: 0;
   border-radius: var(--radius);
   background: color-mix(in oklch, white 6%, transparent);
-  padding: 4px;
+  padding: 0;
 }
 
 [data-skin="brand"] [data-slot="tabs-list"] :is([role="tab"], .tab-pill) {
-  height: 32px;
+  height: 40px;
   flex: 1 1 0;
   min-width: max-content;
-  border-radius: calc(var(--radius) - 4px);
+  border-radius: var(--radius);
   border-width: 0;
   background: transparent;
   padding-inline: 16px;
@@ -140,7 +140,7 @@
   color: var(--muted-foreground);
   outline: none;
   box-shadow: none;
-  clip-path: inset(0 round calc(var(--radius) - 4px));
+  clip-path: none;
 }
 
 /* Citron AI is the inverse pill: light on a dark theme, dark on a light one. */
@@ -155,32 +155,41 @@
 }
 
 [data-skin="brand"] [data-slot="tabs-list"] :is([role="tab"], .tab-pill):is([data-active], [data-state="active"]) {
-  background-color: color-mix(in oklch, white 12%, transparent);
-  background-image: radial-gradient(
-    ellipse at top right,
-    color-mix(in oklch, var(--primary) 55%, transparent),
-    transparent 62%
-  );
-  color: var(--foreground);
+  background-color: color-mix(in oklch, white 2%, transparent);
+  background-image: none;
+  border-width: 0;
+  color: var(--primary);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
   outline: none;
   box-shadow: none;
+}
+
+[data-skin="brand"]:not(.dark) [data-slot="tabs-list"] :is([role="tab"], .tab-pill):is([data-active], [data-state="active"]) {
+  background-color: color-mix(in oklch, white 72%, transparent);
+  color: var(--foreground);
 }
 
 [data-skin="brand"]:not(.dark) [data-slot="tabs-list"] {
   background: color-mix(in oklch, black 6%, transparent);
 }
 
-[data-skin="brand"]:not(.dark) [data-slot="tabs-list"] :is([role="tab"], .tab-pill):is([data-active], [data-state="active"]) {
-  background-color: color-mix(in oklch, white 72%, transparent);
+/* Light brand: the mark is black, and citron glows stay off. */
+[data-skin="brand"]:not(.dark) .logo-mark {
+  color: var(--foreground);
 }
 
-/* Send glow on a rule row. */
+[data-skin="brand"]:not(.dark) {
+  --table-row-glow: color-mix(in oklch, var(--foreground) 12%, transparent);
+}
+
+/* A pool of citron inside the bottom of a sending plate. Dark theme only. */
 [data-skin="brand"] [data-rule-glow] {
   position: relative;
   isolation: isolate;
 }
 
-[data-skin="brand"] [data-rule-glow]::before {
+[data-skin="brand"].dark [data-rule-glow]::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -188,16 +197,46 @@
   border-radius: inherit;
   pointer-events: none;
   background: radial-gradient(
-    ellipse at top right,
-    var(--primary),
-    transparent 62%
+    ellipse 82% 120px at 50% 116%,
+    color-mix(in oklch, var(--primary) 50%, transparent),
+    transparent 72%
   );
   opacity: 0;
   transition: opacity 150ms;
 }
 
-[data-skin="brand"] [data-rule-glow][data-sending="on"]::before {
-  opacity: 0.125;
+[data-skin="brand"].dark [data-rule-glow][data-sending="on"]::before {
+  opacity: 1;
+}
+
+/* Stroke with the glow: clear at the top, citron at the bottom. Dark theme only. */
+[data-skin="brand"].dark [data-rule-glow][data-sending="on"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in oklch, var(--primary) 20%, transparent)
+  );
+  mask:
+    linear-gradient(white 0 0) content-box,
+    linear-gradient(white 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(white 0 0) content-box,
+    linear-gradient(white 0 0);
+  -webkit-mask-composite: xor;
+}
+
+/* Off and available: white thumb. Disabled keeps the faded thumb. */
+[data-skin="brand"].dark
+  [data-slot="switch"]:not([data-disabled])
+  [data-slot="switch-thumb"]:is([data-unchecked], [data-state="unchecked"]) {
+  background-color: white;
 }
 
 /* Switch geometry: two sizes, round thumb. */

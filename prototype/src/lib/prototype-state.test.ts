@@ -114,17 +114,17 @@ describe("the prototype state", () => {
     expect(cards.deposit.sending).toBe(false)
   })
 
-  it("Apply with no selected entity closes the modal and the rule stays incomplete", () => {
+  it("Apply with no selected entity stays open and stores nothing", () => {
     const after = run(
       startOver(),
       { type: "card", brand: first, card: "deposit", op: { kind: "open" } },
       { type: "card", brand: first, card: "deposit", op: { kind: "apply" } }
     )
     const card = after.brands[first].cards.deposit
-    expect(card.expanded).toBe(false)
-    expect(card.showErrors).toBe(false)
+    expect(card.expanded).toBe(true)
+    expect(card.showErrors).toBe(true)
     expect(card.sending).toBe(false)
-    expect(card.applied?.selectedBrandIds).toEqual([])
+    expect(card.applied).toBeNull()
   })
 
   it("an action naming an unknown brand changes nothing", () => {

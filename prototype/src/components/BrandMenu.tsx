@@ -9,7 +9,6 @@ import {
 } from "@/components/HeaderMenu"
 import { NotInPrototype } from "@/components/NotInPrototype"
 import { OverflowText } from "@/components/OverflowText"
-import { Overline } from "@/components/Overline"
 import { Button } from "@/components/ui/button"
 import { BRANDS } from "@/data/brands"
 import { usePrototype } from "@/hooks/use-prototype"
@@ -35,16 +34,14 @@ export function BrandMenu() {
   const active = BRANDS.find((brand) => brand.id === activeBrand) ?? BRANDS[0]
 
   return (
-    <div className="flex items-center gap-3">
-      <Overline className="hidden lg:inline">{t("header.brand")}</Overline>
+    <div className="flex w-52 max-w-full min-w-0 shrink items-center">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <Button
             type="button"
             variant="outline"
             aria-label={t("header.brand")}
-            title={active.name}
-            className="w-52 shrink-0 justify-start gap-2.5 py-0 pr-2.5 pl-1.5 text-left"
+            className="w-full min-w-0 justify-start gap-2.5 py-0 pr-2.5 pl-1.5 text-left"
           >
             <BrandAvatar name={active.name} size="sm" />
             <OverflowText
@@ -54,7 +51,7 @@ export function BrandMenu() {
             <ChevronDown className="text-muted-foreground" />
           </Button>
         </DropdownMenu.Trigger>
-        <HeaderMenuContent className="w-72">
+        <HeaderMenuContent className="w-72 max-w-[calc(100vw-2rem)]">
           <DropdownMenu.RadioGroup
             value={activeBrand}
             onValueChange={selectBrand}

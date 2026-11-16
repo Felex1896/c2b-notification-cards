@@ -66,7 +66,7 @@ export function ChannelsDialog({
     <Dialog open onOpenChange={(open) => (open ? undefined : onClose())}>
       <DialogContent
         showCloseButton={false}
-        className="channels-dialog flex w-full flex-col gap-5 sm:max-w-[560px]"
+        className="channels-dialog flex max-h-[calc(100dvh-2rem)] w-full min-w-0 flex-col gap-5 sm:max-w-[560px]"
       >
         <div className="flex items-center justify-between px-6 pt-6">
           <DialogTitle>{t("channels.dialogTitle")}</DialogTitle>
@@ -81,7 +81,7 @@ export function ChannelsDialog({
           }}
           className="flex min-h-0 flex-1 flex-col gap-4"
         >
-          <TabsList className="mx-2 w-auto">
+          <TabsList className="mx-2 w-auto max-md:[&_:is([role=tab],.tab-pill)]:!min-w-0 max-md:[&_:is([role=tab],.tab-pill)]:overflow-hidden max-md:[&_:is([role=tab],.tab-pill)]:text-ellipsis">
             {CHANNEL_ORDER.map((kind) => (
               <TabsTrigger key={kind} value={kind}>
                 {t(LABELS[kind])}

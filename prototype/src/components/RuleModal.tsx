@@ -1,7 +1,7 @@
 import { XIcon, type LucideIcon } from "lucide-react"
 import { AnimatePresence, motion } from "motion/react"
 import { Dialog as DialogPrimitive } from "radix-ui"
-import type { ReactNode } from "react"
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react"
 import { useTranslation } from "react-i18next"
 
 import { RuleHeader } from "@/components/RuleHeader"
@@ -23,6 +23,8 @@ type RuleModalProps = {
   sending: boolean
   onCancel: () => void
   onApply: () => void
+  /** Left of the buttons. Null hides it. */
+  applyError?: string | null
   onReturnFocus: () => void
   pinned?: ReactNode
   children: ReactNode
@@ -41,6 +43,7 @@ export function RuleModal({
   sending,
   onCancel,
   onApply,
+  applyError,
   onReturnFocus,
   pinned,
   children,
@@ -48,6 +51,26 @@ export function RuleModal({
   const { t } = useTranslation()
   const { frame, fade } = RULE_MOTION
   const afterFade = { ...fade, delay: fade.duration }
+  const formRef = useRef<HTMLDivElement>(null)
+  const scrolledNonce = useRef(0)
+  const [scrollNonce, setScrollNonce] = useState(0)
+
+  function handleApply() {
+    onApply()
+    setScrollNonce((nonce) => nonce + 1)
+  }
+
+  useLayoutEffect(() => {
+    if (scrollNonce === scrolledNonce.current) {
+      return
+    }
+    scrolledNonce.current = scrollNonce
+    const root = formRef.current
+    if (!open || !root) {
+      return
+    }
+    scrollToFirstError(root)
+  }, [scrollNonce, open])
 
   return (
     <AnimatePresence>
@@ -78,18 +101,17 @@ export function RuleModal({
                 data-rule-card=""
                 style={{ borderRadius: "var(--table-radius)" }}
                 className={cn(
-                  "pointer-events-auto flex max-h-full w-[560px] max-w-full flex-col overflow-hidden outline-none",
+                  "pointer-events-auto flex max-h-full w-full max-w-[560px] min-w-0 flex-col overflow-hidden outline-none",
                   ruleFrameClass()
                 )}
               >
-                <div className="flex min-h-0 flex-1 flex-col">
+                <div ref={formRef} className="flex min-h-0 flex-1 flex-col">
                   <RuleHeader
                     layoutId={layoutId}
                     layoutDependency="modal"
                     transition={{ layout: frame }}
                     icon={icon}
                     lit={sending}
-                    glow
                     pinned={pinned}
                     className={cn(
                       "shrink-0 px-6 pt-6",
@@ -138,8 +160,13 @@ export function RuleModal({
                     {children}
                   </motion.div>
                 </div>
-                <CardFooter className="justify-end gap-2 border-t-0 bg-transparent">
-                  <Button type="button" onClick={onApply}>
+                <CardFooter className="flex-wrap justify-end gap-2 border-t-0 bg-transparent">
+                  {applyError ? (
+                    <p className="mr-auto min-w-0 text-left text-sm text-destructive">
+                      {applyError}
+                    </p>
+                  ) : null}
+                  <Button type="button" onClick={handleApply}>
                     {t("common.apply")}
                   </Button>
                   <Button type="button" variant="ghost" onClick={onCancel}>
@@ -153,4 +180,40 @@ export function RuleModal({
       ) : null}
     </AnimatePresence>
   )
+}
+
+/** Bring the topmost marked control to the top of the form scroller. */
+function scrollToFirstError(root: HTMLElement) {
+  const target = root.querySelector<HTMLElement>("[data-field-error]")
+  if (!target) {
+    return
+  }
+  const scroller = scrollParent(root, target)
+  if (!scroller) {
+    const fallback = root.querySelector<HTMLElement>("[data-form-scroll]")
+    if (fallback) {
+      fallback.scrollTop = 0
+    }
+    return
+  }
+  const top =
+    target.getBoundingClientRect().top -
+    scroller.getBoundingClientRect().top +
+    scroller.scrollTop
+  scroller.scrollTo({ top: Math.max(0, top - 12), behavior: "smooth" })
+}
+
+function scrollParent(
+  root: HTMLElement,
+  target: HTMLElement
+): HTMLElement | null {
+  let node = target.parentElement
+  while (node && node !== root) {
+    const overflow = getComputedStyle(node).overflowY
+    if (overflow === "auto" || overflow === "scroll") {
+      return node
+    }
+    node = node.parentElement
+  }
+  return null
 }

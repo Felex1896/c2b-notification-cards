@@ -82,6 +82,7 @@
     --font-family-sans: "Golos Text Variable", sans-serif;
     --chrome-height: 0px;
     --band-height: 0px;
+    --toolbar-height: 0px;
 }
 
 [data-skin="brand"] {

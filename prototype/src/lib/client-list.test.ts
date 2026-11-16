@@ -326,7 +326,7 @@ describe("showing values", () => {
 })
 
 describe("column widths", () => {
-  it("fixed columns leave the remaining width to the filler", () => {
+  it("column minimums add up to the table minimum", () => {
     expect(COLUMNS.map((column) => column.width)).toEqual([
       120, 160, 160, 160, 152, 112, 200, 200,
     ])

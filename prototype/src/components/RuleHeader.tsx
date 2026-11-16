@@ -21,7 +21,6 @@ export function RuleHeader({
   lit,
   end,
   pinned,
-  glow,
   className,
 }: {
   layoutId: string
@@ -36,8 +35,6 @@ export function RuleHeader({
   end?: ReactNode
   /** Stays in the header, above the scroll, full width of the frame. */
   pinned?: ReactNode
-  /** Open modal: the glow stays on the title block, not the whole frame. */
-  glow?: boolean
   className?: string
 }) {
   return (
@@ -45,17 +42,15 @@ export function RuleHeader({
       layout
       layoutDependency={layoutDependency}
       transition={transition}
-      data-rule-glow={glow ? "" : undefined}
-      data-sending={glow && lit ? "on" : undefined}
       className={cn("flex w-full flex-col", className)}
     >
       <motion.div
         layoutId={`${layoutId}-heading`}
         layoutDependency={layoutDependency}
         transition={transition}
-        className="flex w-full min-w-0 flex-col gap-3"
+        className="flex w-full min-w-0 flex-col gap-4"
       >
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="flex min-w-0 items-center gap-4">
           <div
             className={cn(
               "flex size-10 shrink-0 items-center justify-center rounded-lg",

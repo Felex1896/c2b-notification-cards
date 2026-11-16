@@ -12,10 +12,12 @@
 
   "errors.required": "Required field",
   "errors.selectAtLeastOne": "Select at least 1 option",
+  "errors.selectEntity": "Select at least 1 entity",
   "errors.invalidEmail": "Enter a valid email",
   "errors.invalidCode": "Enter the 6-digit code",
 
   "toolbar.label": "Prototype",
+  "toolbar.settings": "Prototype settings",
   "toolbar.startOver": "Start over",
   "toolbar.clientsLoaded": "Clients loaded",
   "toolbar.alertsSetUp": "Alerts set up",
@@ -29,6 +31,8 @@
   "header.product": "Product",
   "header.product.c2b": "C2B Analytics",
   "header.product.b2b": "B2B Analytics",
+  "header.product.c2b.short": "C2B",
+  "header.product.b2b.short": "B2B",
   "header.brand": "Brand",
   "header.brand.scope": "Data is shown for the selected brand",
   "header.brand.manage": "Manage brands and wallets",
@@ -109,12 +113,11 @@
   "rule.firstDeposit.meaning": "Fires on a client’s first deposit into a chosen company category.",
 
   "rule.row.setUp": "Set up",
+  "rule.row.edit": "Edit",
   "rule.row.mute": "Mute alerts",
   "rule.row.unmute": "Unmute alerts",
-  "rule.row.offUntilSetUp": "Alerts off until the rule is set up",
-  "rule.row.setUpFirst": "Set up the rule first",
   "rule.row.chooseChat": "Choose where to send",
-  "rule.row.sendNotifications": "Send notifications",
+  "rule.row.notifications": "Notifications",
 
   "rule.withdrawal.minAmount": "Min withdrawal amount *",
   "rule.deposit.minAmount": "Min deposit amount *",

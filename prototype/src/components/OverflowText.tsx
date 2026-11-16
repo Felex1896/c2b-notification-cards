@@ -5,6 +5,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useCoarsePointer } from "@/hooks/use-coarse-pointer"
+import { useLongPress } from "@/hooks/use-long-press"
 import { cn } from "@/lib/utils"
 
 /**
@@ -21,6 +23,8 @@ export function OverflowText({
   const ref = useRef<HTMLSpanElement>(null)
   const [overflow, setOverflow] = useState(false)
   const [shown, setShown] = useState(false)
+  const coarse = useCoarsePointer()
+  const press = useLongPress(() => setShown(true), coarse && overflow)
 
   useLayoutEffect(() => {
     const el = ref.current
@@ -37,9 +41,33 @@ export function OverflowText({
   }, [text])
 
   return (
-    <Tooltip open={overflow && shown} onOpenChange={setShown}>
+    <Tooltip
+      open={overflow && shown}
+      onOpenChange={(next) => {
+        if (coarse) {
+          if (!next) {
+            setShown(false)
+          }
+          return
+        }
+        setShown(next)
+      }}
+    >
       <TooltipTrigger asChild>
-        <span ref={ref} className={cn("block min-w-0 truncate", className)}>
+        <span
+          ref={ref}
+          className={cn("block min-w-0 truncate", className)}
+          onPointerDown={press.onPointerDown}
+          onPointerMove={press.onPointerMove}
+          onPointerUp={press.onPointerUp}
+          onPointerCancel={press.onPointerCancel}
+          onContextMenu={press.onContextMenu}
+          onClick={(event) => {
+            if (press.consumeHeld()) {
+              event.preventDefault()
+            }
+          }}
+        >
           {text}
         </span>
       </TooltipTrigger>

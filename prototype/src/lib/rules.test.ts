@@ -205,12 +205,13 @@ describe("balanceErrors and isBalanceComplete", () => {
 })
 
 describe("entityErrors", () => {
-  it("selecting no entity leaves the rule incomplete with nothing highlighted", () => {
+  it("selecting no entity leaves the rule incomplete and asks for one entity, with no field message", () => {
     const values = { ...emptyEntity(), amount: "10" }
     const errors = entityErrors(values)
 
     expect(errors.amount).toBeUndefined()
     expect(errors.categories).toEqual({})
+    expect(english(errors.selection)).toBe("Select at least 1 entity")
     expect(isEntityComplete(values)).toBe(false)
   })
 
@@ -237,6 +238,7 @@ describe("entityErrors", () => {
 
     expect(errors.amount).toBeUndefined()
     expect(errors.categories).toEqual({})
+    expect(errors.selection).toBeUndefined()
     expect(isEntityComplete(values)).toBe(true)
   })
 
@@ -305,7 +307,7 @@ describe("countedSubRules", () => {
 })
 
 describe("firstDepositErrors and isFirstDepositComplete", () => {
-  it("no counted row is incomplete and highlights nothing", () => {
+  it("no counted row is incomplete and asks for one entity", () => {
     const empty = emptyFirstDeposit()
     const onlyBrandLess = {
       ...emptyFirstDeposit(),
@@ -313,9 +315,15 @@ describe("firstDepositErrors and isFirstDepositComplete", () => {
     }
 
     expect(firstDepositErrors(empty).subRules).toEqual({})
+    expect(english(firstDepositErrors(empty).selection)).toBe(
+      "Select at least 1 entity"
+    )
     expect(isFirstDepositComplete(empty)).toBe(false)
     expect(firstDepositErrors(onlyBrandLess).subRules).toEqual({})
     expect(firstDepositErrors(onlyBrandLess).subRules.ghost).toBeUndefined()
+    expect(english(firstDepositErrors(onlyBrandLess).selection)).toBe(
+      "Select at least 1 entity"
+    )
     expect(isFirstDepositComplete(onlyBrandLess)).toBe(false)
   })
 
@@ -326,6 +334,7 @@ describe("firstDepositErrors and isFirstDepositComplete", () => {
     }
 
     expect(firstDepositErrors(values).subRules["row-mixer"]).toEqual({})
+    expect(firstDepositErrors(values).selection).toBeUndefined()
     expect(isFirstDepositComplete(values)).toBe(true)
   })
 

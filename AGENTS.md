@@ -88,4 +88,4 @@ Snapshot shape, grilled: private GitHub, invite-only; one commit; frozen after t
 - Do not copy live cabinet chrome (layout, copy, Setup machines), and do not read login or the cabinet as design sources. The brand reference is the marketing landing.
 - Do not put take-home material into `portfolio/`, and do not treat this work as a Case.
 - Do not put Citron terms in a glossary above this folder. If they need a home, it is a `CONTEXT.md` here.
-- Do not re-grill the card control, the label-left form grid, per-card chats, or never-blocked Apply. All are settled in the spec.
+- Do not re-grill the card control, the label-left form grid, per-card chats, or Apply staying open until the draft is complete. All are settled in the spec.

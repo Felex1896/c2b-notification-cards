@@ -10,12 +10,15 @@ import type { SelectionIntent } from "@/lib/selection"
 
 type CategoryBrandPickerProps = {
   selectedBrandIds: readonly string[]
+  /** Every entity dropdown is red. No message under them. */
+  selectsInvalid?: boolean
   onSelect: (intent: SelectionIntent) => void
   renderSubRows: (category: Category) => ReactNode
 }
 
 export function CategoryBrandPicker({
   selectedBrandIds,
+  selectsInvalid = false,
   onSelect,
   renderSubRows,
 }: CategoryBrandPickerProps) {
@@ -84,6 +87,7 @@ export function CategoryBrandPicker({
             selected={selected}
             heldCategoryId={heldCategoryId}
             active={active}
+            selectsInvalid={selectsInvalid}
             onOpenChange={handleOpenChange}
             onSelect={handleHeldSelect}
             renderSubRows={renderSubRows}
@@ -99,6 +103,7 @@ function CategoryRows({
   selected,
   heldCategoryId,
   active,
+  selectsInvalid,
   onOpenChange,
   onSelect,
   renderSubRows,
@@ -107,6 +112,7 @@ function CategoryRows({
   selected: ReadonlySet<string>
   heldCategoryId: string | null
   active: boolean
+  selectsInvalid: boolean
   onOpenChange: (category: Category, open: boolean) => void
   onSelect: (intent: SelectionIntent, checked: boolean) => void
   renderSubRows: (category: Category) => ReactNode
@@ -119,6 +125,7 @@ function CategoryRows({
         <EntitySelect
           brands={category.brands}
           selected={selected}
+          invalid={selectsInvalid}
           open={heldCategoryId === category.id}
           onOpenChange={(open) => onOpenChange(category, open)}
           onToggleBrand={(brandId, checked) =>

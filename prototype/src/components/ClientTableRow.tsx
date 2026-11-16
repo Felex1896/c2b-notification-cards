@@ -42,8 +42,13 @@ export function ClientTableRow({
           language={language}
         />
       ))}
-      <td className={`${DIVIDER} group-hover:bg-table-row-hover`} />
-      <td className="sticky right-0 z-20 h-12 p-0">
+      <td
+        className={cn(
+          "sticky right-0 z-20 h-12 bg-background p-0",
+          DIVIDER,
+          "group-hover:bg-table-row-hover"
+        )}
+      >
         <div
           aria-hidden
           className="pointer-events-none absolute inset-y-0 right-0 w-72 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100"

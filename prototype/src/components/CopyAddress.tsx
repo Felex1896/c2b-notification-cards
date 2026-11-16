@@ -55,7 +55,7 @@ export function CopyAddress({ value, text }: { value: string; text: string }) {
             size="icon-xs"
             aria-label={t("clients.copyAddress")}
             className={cn(
-              "opacity-0 group-hover/address:opacity-100 focus-visible:opacity-100",
+              "opacity-0 group-hover/address:opacity-100 focus-visible:opacity-100 max-md:opacity-100",
               copied && "opacity-100"
             )}
             onClick={() => {

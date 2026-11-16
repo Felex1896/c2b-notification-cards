@@ -33,7 +33,7 @@ export function UploadDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="w-full sm:max-w-[560px]"
+        className="max-h-[calc(100dvh-2rem)] w-full min-w-0 overflow-y-auto sm:max-w-[560px]"
       >
         <DialogHeader>
           <div className="flex items-center justify-between gap-4">
@@ -46,9 +46,7 @@ export function UploadDialog({
               : t("upload.first")}
           </DialogDescription>
         </DialogHeader>
-        <div className="rule-card-layer rounded-table-header p-4">
-          <SampleFileButtons onPick={pick} />
-        </div>
+        <SampleFileButtons onPick={pick} />
         <div className="flex justify-end">
           <DialogClose asChild>
             <Button type="button" variant="ghost">

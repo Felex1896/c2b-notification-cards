@@ -12,10 +12,12 @@
 
   "errors.required": "Обязательное поле",
   "errors.selectAtLeastOne": "Выберите хотя бы 1 вариант",
+  "errors.selectEntity": "Выберите хотя бы 1 площадку",
   "errors.invalidEmail": "Введите корректный email",
   "errors.invalidCode": "Введите 6-значный код",
 
   "toolbar.label": "Прототип",
+  "toolbar.settings": "Настройки прототипа",
   "toolbar.startOver": "Сначала",
   "toolbar.clientsLoaded": "Клиенты загружены",
   "toolbar.alertsSetUp": "Уведомления настроены",
@@ -29,6 +31,8 @@
   "header.product": "Продукт",
   "header.product.c2b": "C2B Analytics",
   "header.product.b2b": "B2B Analytics",
+  "header.product.c2b.short": "C2B",
+  "header.product.b2b.short": "B2B",
   "header.brand": "Бренд",
   "header.brand.scope": "Данные показаны для выбранного бренда",
   "header.brand.manage": "Бренды и кошельки",
@@ -111,12 +115,11 @@
   "rule.firstDeposit.meaning": "Срабатывает на первый депозит клиента в выбранную категорию компаний.",
 
   "rule.row.setUp": "Настроить",
+  "rule.row.edit": "Изменить",
   "rule.row.mute": "Выключить уведомления",
   "rule.row.unmute": "Включить уведомления",
-  "rule.row.offUntilSetUp": "Уведомления выключены, пока правило не настроено",
-  "rule.row.setUpFirst": "Сначала настройте правило",
   "rule.row.chooseChat": "Выберите, куда отправлять",
-  "rule.row.sendNotifications": "Отправлять уведомления",
+  "rule.row.notifications": "Уведомления",
 
   "rule.withdrawal.minAmount": "Мин. сумма вывода *",
   "rule.deposit.minAmount": "Мин. сумма депозита *",

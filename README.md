@@ -1,6 +1,6 @@
 # C2B notification cards
 
-Snapshot for review. The clickable prototype covers the whole setup: an empty brand, a sample wallet file, the client list, and the four alert rules. English and Russian. Two skins.
+Snapshot for review. The clickable prototype covers the whole setup: an empty brand, a sample wallet file, the client list, and the four alert rules. English and Russian. Two skins. On a phone the reviewer strip is a bar that opens into the same options.
 
 **Live prototype:** https://felex1896.github.io/c2b-notification-cards-demo/
 

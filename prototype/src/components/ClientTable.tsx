@@ -70,7 +70,7 @@ export function ClientTable({
       </div>
       <div
         className={cn(
-          "relative sticky bottom-0 z-30 mx-2",
+          "relative sticky bottom-(--toolbar-height) z-30 mx-2",
           overflow ? "-mt-3 h-3" : "h-0 overflow-hidden"
         )}
       >

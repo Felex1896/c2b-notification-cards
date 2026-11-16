@@ -1,7 +1,9 @@
 import { useLayoutEffect, useRef } from "react"
 
 /** Writes this element's height onto `<html>` so sticky siblings can sit below it. */
-export function useCssHeight(name: "--chrome-height" | "--band-height") {
+export function useCssHeight(
+  name: "--chrome-height" | "--band-height" | "--toolbar-height"
+) {
   const ref = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {

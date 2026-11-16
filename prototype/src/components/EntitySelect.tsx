@@ -34,6 +34,7 @@ export function EntitySelect({
   brands,
   selected,
   open,
+  invalid = false,
   onOpenChange,
   onToggleBrand,
   onSelectVisible,
@@ -41,6 +42,8 @@ export function EntitySelect({
   brands: Brand[]
   selected: ReadonlySet<string>
   open: boolean
+  /** Red outline, no message under the control. */
+  invalid?: boolean
   onOpenChange: (open: boolean) => void
   onToggleBrand: (brandId: string, checked: boolean) => void
   onSelectVisible: (brandIds: string[], checked: boolean) => void
@@ -53,7 +56,9 @@ export function EntitySelect({
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="flex h-(--control-height) w-full items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent py-2 pr-2 pl-2.5 text-left text-sm whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+          aria-invalid={invalid || undefined}
+          data-field-error={invalid ? "" : undefined}
+          className="flex h-(--control-height) w-full items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent py-2 pr-2 pl-2.5 text-left text-sm whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40"
         >
           <OverflowText
             className="flex-1 text-left"

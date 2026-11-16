@@ -6,6 +6,7 @@ import {
   ACTIONS_COLUMN_WIDTH,
   COLUMNS,
   nextSort,
+  tableMinWidth,
   type ListSort,
   type SortKey,
 } from "@/lib/client-list"
@@ -16,14 +17,21 @@ const TABLE =
 /** The Client ID header stays outside the scroller, so it is one piece of the pill. */
 export const CLIENT_ID_HEADER_ID = "clients-col-client-id"
 
+function columnShare(part: number, whole: number) {
+  return `${(part / whole) * 100}%`
+}
+
 export function ClientTableColGroup() {
+  const total = tableMinWidth()
   return (
     <colgroup>
       {COLUMNS.map((column) => (
-        <col key={column.key} style={{ width: column.width }} />
+        <col
+          key={column.key}
+          style={{ width: columnShare(column.width, total) }}
+        />
       ))}
-      <col />
-      <col style={{ width: ACTIONS_COLUMN_WIDTH }} />
+      <col style={{ width: columnShare(ACTIONS_COLUMN_WIDTH, total) }} />
     </colgroup>
   )
 }
@@ -54,7 +62,10 @@ export function ClientTableHeader({
             sort.direction
           )}
           className="flex h-12 shrink-0 items-center border-r border-border px-3"
-          style={{ width: idColumn.width }}
+          style={{
+            width: columnShare(idColumn.width, minWidth),
+            minWidth: idColumn.width,
+          }}
         >
           <SortButton
             column={idColumn.key}
@@ -71,10 +82,21 @@ export function ClientTableHeader({
           >
             <colgroup>
               {rest.map((column) => (
-                <col key={column.key} style={{ width: column.width }} />
+                <col
+                  key={column.key}
+                  style={{
+                    width: columnShare(column.width, minWidth - idColumn.width),
+                  }}
+                />
               ))}
-              <col />
-              <col style={{ width: ACTIONS_COLUMN_WIDTH }} />
+              <col
+                style={{
+                  width: columnShare(
+                    ACTIONS_COLUMN_WIDTH,
+                    minWidth - idColumn.width
+                  ),
+                }}
+              />
             </colgroup>
             <thead>
               <tr>
@@ -97,7 +119,6 @@ export function ClientTableHeader({
                     />
                   </th>
                 ))}
-                <th className="h-12 p-0" aria-hidden />
                 <th className="h-12 p-0" aria-hidden />
               </tr>
             </thead>

@@ -28,7 +28,7 @@ The rule card and its open modal, as they are in code. Everything else is brough
 | Control radius | 12 | Buttons, inputs, select triggers, tab track, menu rows |
 | Round | full | Switch, avatar only |
 | Control height | 40 | Every text button, input, select trigger, entity picker trigger, channel picker (trigger and prefix), amount prefix, tab track, header controls (brand menu, account menu), search |
-| Overline | 11px, medium, wide tracking, uppercase, muted | Every all-caps caption ("Send notifications", "Brand" in the brand menu) |
+| Overline | 11px, medium, wide tracking, uppercase, muted | Unused. The card caption matches the button. The brand menu has no caption. |
 
 Nested corners stay concentric: inner = outer − inset (tab track 12, inset 4, pill 8; table shell 16, header inset 8, header 8).
 
@@ -84,7 +84,7 @@ Client list and Notifications start at the same left edge, 16px in from the cont
 ## Code home
 
 - Numbers are named tokens in `tokens.json` → generator → `brand.generated.css`: frame, plate and control radius, control height, overline size.
-- What a number cannot say (glass, tab glow, switch geometry, dialog anatomy) is a rule in `brand.overrides.css`, scoped to brand.
+- What a number cannot say (glass, the citron glow and the top-to-bottom citron stroke on a tab and a sending plate, switch geometry, dialog anatomy) is a rule in `brand.overrides.css`, scoped to brand. The open rule modal carries neither.
 - The hand-written reference rules now in `index.css` move under brand. `index.css` keeps only what both skins share (theme mapping, sandbox variables, layout helpers).
 - `check:skin` thresholds rise to the real counts after the move; the new numbers are written where the old ones were.
 - Design-system docs (`tokens.md`, `components.md`) describe these values and this button set.

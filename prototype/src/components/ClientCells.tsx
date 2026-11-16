@@ -6,6 +6,7 @@ import eth from "@/assets/coins/eth.svg"
 import trx from "@/assets/coins/trx.svg"
 import usdt from "@/assets/coins/usdt.svg"
 import { CopyAddress } from "@/components/CopyAddress"
+import { HoverTooltip } from "@/components/HoverTooltip"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { ActivityRange, Currency } from "@/data/wallet-types"
 import type { MessageKey } from "@/i18n/keys"
@@ -59,17 +60,18 @@ export function ActivityCell({ range }: { range: ActivityRange | null }) {
   const { icon: Icon, className, labelKey } = ACTIVITY[kind]
   const label = t(labelKey)
   return (
-    <span
-      title={label}
-      aria-label={label}
-      className={cn(
-        "inline-flex h-6 items-center gap-1 rounded-full px-2 text-xs font-medium",
-        className
-      )}
-    >
-      <Icon className="size-3.5" />
-      {hours}
-    </span>
+    <HoverTooltip content={label}>
+      <span
+        aria-label={label}
+        className={cn(
+          "inline-flex h-6 items-center gap-1 rounded-full px-2 text-xs font-medium",
+          className
+        )}
+      >
+        <Icon className="size-3.5" />
+        {hours}
+      </span>
+    </HoverTooltip>
   )
 }
 
