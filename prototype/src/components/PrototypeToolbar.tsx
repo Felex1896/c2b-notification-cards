@@ -31,26 +31,38 @@ export function PrototypeToolbar() {
       <div className="border-b border-border bg-background md:hidden">
         <button
           type="button"
+          data-touch-drag=""
           aria-expanded={open}
           className="flex h-10 w-full flex-col items-center justify-center gap-1 text-sm text-muted-foreground"
           onPointerDown={(event) => {
+            if (event.button !== 0) {
+              return
+            }
             startY.current = event.clientY
             dragged.current = false
-            event.currentTarget.setPointerCapture(event.pointerId)
-          }}
-          onPointerMove={(event) => {
-            if (startY.current === null) {
-              return
+            const onMove = (ev: PointerEvent) => {
+              if (startY.current === null) {
+                return
+              }
+              const delta = ev.clientY - startY.current
+              if (Math.abs(delta) < DRAG_PX) {
+                return
+              }
+              dragged.current = true
+              setOpen(delta > 0)
             }
-            const delta = event.clientY - startY.current
-            if (Math.abs(delta) < DRAG_PX) {
-              return
+            const onEnd = () => {
+              startY.current = null
+              window.removeEventListener("pointermove", onMove)
+              window.removeEventListener("pointerup", onEnd)
+              window.removeEventListener("pointercancel", onEnd)
+              window.setTimeout(() => {
+                dragged.current = false
+              }, 0)
             }
-            dragged.current = true
-            setOpen(delta > 0)
-          }}
-          onPointerUp={() => {
-            startY.current = null
+            window.addEventListener("pointermove", onMove)
+            window.addEventListener("pointerup", onEnd)
+            window.addEventListener("pointercancel", onEnd)
           }}
           onClick={() => {
             if (dragged.current) {

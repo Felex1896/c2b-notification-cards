@@ -78,7 +78,7 @@ export function RuleModal({
         <DialogPrimitive.Portal key="rule-modal" forceMount>
           <DialogPrimitive.Overlay forceMount asChild>
             <motion.div
-              className="fixed inset-0 isolate z-50 bg-black/10 supports-backdrop-filter:backdrop-blur-xs"
+              className="fixed inset-0 isolate z-50 bg-black/30 supports-backdrop-filter:backdrop-blur-xs"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1, transition: fade }}
               exit={{ opacity: 0, transition: afterFade }}

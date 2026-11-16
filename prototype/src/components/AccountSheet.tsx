@@ -75,7 +75,7 @@ export function AccountSheet() {
               <button
                 type="button"
                 aria-label={t("common.close")}
-                className="absolute inset-0 bg-black/10 supports-backdrop-filter:backdrop-blur-xs"
+                className="absolute inset-0 bg-black/30 supports-backdrop-filter:backdrop-blur-xs"
                 onClick={() => setOpen(false)}
               />
               <div className="relative flex w-full flex-col gap-1 rounded-t-3xl bg-popover p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] text-sm">

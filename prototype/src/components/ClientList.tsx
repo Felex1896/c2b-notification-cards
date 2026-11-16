@@ -29,19 +29,19 @@ export function ClientList({ upload }: { upload: Upload }) {
       >
         <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-3 px-4 md:flex-row md:items-center">
           <PageTabs />
-          <div className="flex w-full min-w-0 flex-col gap-3 md:ml-auto md:w-auto md:flex-row md:items-center">
+          <div className="flex w-full min-w-0 items-center gap-3 md:ml-auto md:w-auto">
             <Input
               type="search"
               aria-label={t("clients.search")}
               placeholder={t("clients.search")}
               value={list.search}
               onChange={(event) => setSearch(event.target.value)}
-              className="w-full min-w-0 md:w-56"
+              className="w-auto min-w-0 flex-1 md:w-56 md:flex-none"
             />
             <Button
               type="button"
               variant="outline"
-              className="w-full md:w-auto"
+              className="shrink-0"
               onClick={() => setReplacing(true)}
             >
               {t("clients.upload")}

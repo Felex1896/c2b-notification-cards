@@ -246,3 +246,32 @@
 .table-x-bar::-webkit-scrollbar {
   display: none;
 }
+
+/* Pan wins over a tap. The list matches INTERACTIVE_SELECTOR in touch-tap.ts. */
+html,
+button,
+a,
+input,
+textarea,
+select,
+label,
+summary,
+[role="button"],
+[role="tab"],
+[role="checkbox"],
+[role="switch"],
+[role="radio"],
+[role="menuitem"],
+[role="menuitemradio"],
+[role="menuitemcheckbox"],
+[role="option"],
+[role="combobox"],
+[role="link"] {
+  touch-action: manipulation;
+}
+
+/* Dialog scrim. Three times the stock bg-black/10. The rule modal and the
+   account sheet set the same alpha on their own overlays. */
+[data-slot="dialog-overlay"] {
+  background-color: rgb(0 0 0 / 30%);
+}

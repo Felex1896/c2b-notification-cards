@@ -10,9 +10,11 @@ import {
 import { PrototypeProvider } from "@/components/PrototypeProvider"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { bootLanguage } from "@/i18n"
+import { installTouchTap } from "@/lib/touch-tap"
 
 bootDocumentAppearance()
 bootLanguage()
+installTouchTap()
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

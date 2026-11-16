@@ -1,7 +1,6 @@
 import { useEffect, useRef, type MouseEvent, type PointerEvent } from "react"
 
-const HOLD_MS = 500
-const MOVE_PX = 8
+import { TOUCH_HOLD_MS, TOUCH_SLOP_PX } from "@/lib/touch-tap"
 
 /**
  * A finger hold. A mouse never starts it, and a small move cancels it,
@@ -10,6 +9,7 @@ const MOVE_PX = 8
 export function useLongPress(onHold: () => void, enabled: boolean) {
   const timer = useRef<number | null>(null)
   const origin = useRef<{ x: number; y: number } | null>(null)
+  const host = useRef<HTMLElement | null>(null)
   const held = useRef(false)
   const onHoldRef = useRef(onHold)
 
@@ -31,6 +31,8 @@ export function useLongPress(onHold: () => void, enabled: boolean) {
       timer.current = null
     }
     origin.current = null
+    host.current?.removeAttribute("data-touch-held")
+    host.current = null
   }
 
   return {
@@ -47,10 +49,15 @@ export function useLongPress(onHold: () => void, enabled: boolean) {
       held.current = false
       clear()
       origin.current = { x: event.clientX, y: event.clientY }
+      const pressed = event.currentTarget
       timer.current = window.setTimeout(() => {
         held.current = true
+        if (pressed instanceof HTMLElement) {
+          host.current = pressed
+          pressed.setAttribute("data-touch-held", "")
+        }
         onHoldRef.current()
-      }, HOLD_MS)
+      }, TOUCH_HOLD_MS)
     },
     onPointerMove(event: PointerEvent) {
       const start = origin.current
@@ -59,7 +66,7 @@ export function useLongPress(onHold: () => void, enabled: boolean) {
       }
       const dx = event.clientX - start.x
       const dy = event.clientY - start.y
-      if (dx * dx + dy * dy > MOVE_PX * MOVE_PX) {
+      if (dx * dx + dy * dy > TOUCH_SLOP_PX * TOUCH_SLOP_PX) {
         clear()
       }
     },

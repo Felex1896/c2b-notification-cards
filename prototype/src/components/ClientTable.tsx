@@ -87,6 +87,7 @@ export function ClientTable({
         {thumb && (
           <div
             aria-hidden
+            data-touch-drag=""
             className="absolute top-0.5 h-2 cursor-grab rounded-full bg-muted-foreground/80 active:cursor-grabbing"
             style={{ width: thumb.width, left: thumb.offset }}
             onPointerDown={onThumbPointerDown}
